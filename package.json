@@ -6,6 +6,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
+    "docs": "typedoc src/index.ts",
     "build": "npx esbuild ./src/index.ts --bundle --target=es2022 '--external:crypto' --outfile=dist/index.js",
     "publish": "./scripts/changes.sh > CHANGELOG.md && ./scripts/version.sh"
   },
@@ -22,6 +23,7 @@
   "devDependencies": {
     "crypto-browserify": "^3.12.0",
     "esbuild": "^0.21.5",
+    "typedoc": "^0.27.6",
     "typescript": "^5.4.5"
   }
 }
