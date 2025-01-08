@@ -1,0 +1,27 @@
+{
+  "name": "@mjtdev/message",
+  "version": "1.0.0",
+  "sideEffects": false,
+  "description": "mjtdev message",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "npx esbuild ./src/index.ts --bundle --target=es2022 '--external:crypto' --outfile=dist/index.js",
+    "publish": "./scripts/changes.sh > CHANGELOG.md && ./scripts/version.sh"
+  },
+  "keywords": [],
+  "author": "Matt Taylor (https://mjt.dev)",
+  "license": "MIT",
+  "dependencies": {
+    "@mjt-engine/object": "github:mjt-engine/object",
+    "@msgpack/msgpack": "^3.0.0-beta2"
+  },
+  "peerDependencies": {
+    "nats.ws": "^1.27.0"
+  },
+  "devDependencies": {
+    "crypto-browserify": "^3.12.0",
+    "esbuild": "^0.21.5",
+    "typescript": "^5.4.5"
+  }
+}
