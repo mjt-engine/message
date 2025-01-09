@@ -8,7 +8,10 @@
   "scripts": {
     "docs": "typedoc src/index.ts",
     "build": "npx esbuild ./src/index.ts --bundle --target=es2022 '--external:crypto' --outfile=dist/index.js",
-    "publish": "./scripts/changes.sh > CHANGELOG.md && ./scripts/version.sh"
+    "build-docs": "pnpm run build && pnpm run docs",
+    "changelog": "./scripts/changes.sh > CHANGELOG.md",
+    "changelog-version": "pnpm run changelog && ./scripts/version.sh",
+    "publish": "pnpm run build-docs && pnpm run changelog-version"
   },
   "keywords": [],
   "author": "Matt Taylor (https://mjt.dev)",
