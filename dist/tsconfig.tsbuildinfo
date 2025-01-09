@@ -1,0 +1,1 @@
+{"root":["../src/connectionmessagetypes.ts","../src/messages.ts","../src/connectlistenertosubscription.ts","../src/createconnection.ts","../src/index.ts","../src/natsheaderstorecord.ts","../src/recordtonatsheaders.ts","../src/error/errortoerrordetail.ts","../src/error/errortotext.ts"],"version":"5.7.2"}

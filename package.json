@@ -7,7 +7,9 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "docs": "typedoc src/index.ts",
-    "build": "npx esbuild ./src/index.ts --bundle --target=es2022 '--external:crypto' --outfile=dist/index.js",
+    "build-esbuild": "npx esbuild ./src/index.ts --bundle --target=es2022 '--external:crypto' --outfile=dist/index.js",
+    "build": "tsc -b",
+
     "build-docs": "pnpm run build && pnpm run docs",
     "changelog": "./scripts/changes.sh > CHANGELOG.md",
     "changelog-version": "pnpm run changelog && ./scripts/version.sh",
