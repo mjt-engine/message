@@ -1,5 +1,5 @@
 {
-  "name": "@mjtdev/message",
+  "name": "@mjt-engine/message",
   "version": "2025.1.8-1208",
   "sideEffects": false,
   "description": "mjtdev message",
