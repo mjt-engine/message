@@ -2,6 +2,7 @@
 
 
 ## 2025-01-09
+- fix typo in version.sh ([363144b](https://github.com/mjt-engine/message/commit/363144b35fe39fb76a63c54e924921571158c604)) by Matt Taylor
 - use tsc instead of esbuild ([4831a02](https://github.com/mjt-engine/message/commit/4831a026cd528819aa00232962b62c00980503fc)) by Matt Taylor
 - update build scripts ([db76515](https://github.com/mjt-engine/message/commit/db76515a64bcd4566be8bc47678f89b8d6a4bf4f)) by Matt Taylor
 - update mjtdev->mjt-engine in project name ([1fc6879](https://github.com/mjt-engine/message/commit/1fc687928574b4654a281068d4630422667cbc44)) by Matt Taylor
