@@ -1,6 +1,6 @@
 import { isDefined, isUndefined, toMany } from "@mjt-engine/object";
 import * as msgpack from "@msgpack/msgpack";
-import { RequestStrategy, connect } from "nats.ws";
+import { RequestStrategy, connect, credsAuthenticator } from "nats.ws";
 import type {
   ConnectionListener,
   ConnectionMap,
@@ -14,14 +14,14 @@ export const createConnection = async <
   E extends Record<string, string> = Record<string, string>
 >({
   server,
-  token,
+  creds,
   subscribers = {},
   options = {},
   env = {},
 }: {
   server: string[] | string;
   subscribers?: Partial<{ [k in keyof CM]: ConnectionListener<CM, k, E> }>;
-  token?: string;
+  creds?: string;
   options?: Partial<{
     log: (message: string, extra: unknown) => void;
   }>;
@@ -29,7 +29,10 @@ export const createConnection = async <
 }) => {
   const { log = () => {} } = options;
   log("createConnection: server: ", server);
-  const connection = await connect({ servers: [...toMany(server)], token });
+  const connection = await connect({
+    servers: [...toMany(server)],
+    authenticator: credsAuthenticator(new TextEncoder().encode(creds)),
+  });
   const entries = Object.entries(subscribers);
   log("createConnection: entries: ", entries);
   for (const [subject, listener] of entries) {
