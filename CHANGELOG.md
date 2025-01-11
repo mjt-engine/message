@@ -1,6 +1,9 @@
 # Changelog
 
 
+## 2025-01-11
+- added token to connection config ([89a9ffb](https://github.com/mjt-engine/message/commit/89a9ffb4e4b3bcb5b0d696b01fb56421eb4dd586)) by Matt Taylor
+
 ## 2025-01-09
 - fix typo in version.sh ([363144b](https://github.com/mjt-engine/message/commit/363144b35fe39fb76a63c54e924921571158c604)) by Matt Taylor
 - use tsc instead of esbuild ([4831a02](https://github.com/mjt-engine/message/commit/4831a026cd528819aa00232962b62c00980503fc)) by Matt Taylor
