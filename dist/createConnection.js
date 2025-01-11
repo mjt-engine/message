@@ -3,10 +3,10 @@ import * as msgpack from "@msgpack/msgpack";
 import { RequestStrategy, connect } from "nats.ws";
 import { connectListenerToSubscription } from "./connectListenerToSubscription";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
-export const createConnection = async ({ server, subscribers = {}, options = {}, env = {}, }) => {
+export const createConnection = async ({ server, token, subscribers = {}, options = {}, env = {}, }) => {
     const { log = () => { } } = options;
     log("createConnection: server: ", server);
-    const connection = await connect({ servers: [...toMany(server)] });
+    const connection = await connect({ servers: [...toMany(server)], token });
     const entries = Object.entries(subscribers);
     log("createConnection: entries: ", entries);
     for (const [subject, listener] of entries) {

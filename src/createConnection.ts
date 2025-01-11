@@ -14,18 +14,22 @@ export const createConnection = async <
   E extends Record<string, string> = Record<string, string>
 >({
   server,
+  token,
   subscribers = {},
   options = {},
   env = {},
 }: {
   server: string[] | string;
   subscribers?: Partial<{ [k in keyof CM]: ConnectionListener<CM, k, E> }>;
-  options?: Partial<{ log: (message: string, extra: unknown) => void }>;
+  token?: string;
+  options?: Partial<{
+    log: (message: string, extra: unknown) => void;
+  }>;
   env?: Partial<E>;
 }) => {
   const { log = () => {} } = options;
   log("createConnection: server: ", server);
-  const connection = await connect({ servers: [...toMany(server)] });
+  const connection = await connect({ servers: [...toMany(server)], token });
   const entries = Object.entries(subscribers);
   log("createConnection: entries: ", entries);
   for (const [subject, listener] of entries) {
