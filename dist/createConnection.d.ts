@@ -1,8 +1,8 @@
 import type { ConnectionListener, ConnectionMap } from "./ConnectionMessageTypes";
-export declare const createConnection: <CM extends ConnectionMap, E extends Record<string, string> = Record<string, string>>({ server, token, subscribers, options, env, }: {
+export declare const createConnection: <CM extends ConnectionMap, E extends Record<string, string> = Record<string, string>>({ server, creds, subscribers, options, env, }: {
     server: string[] | string;
     subscribers?: Partial<{ [k in keyof CM]: ConnectionListener<CM, k, E>; }>;
-    token?: string;
+    creds?: string;
     options?: Partial<{
         log: (message: string, extra: unknown) => void;
     }>;

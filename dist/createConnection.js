@@ -1,12 +1,15 @@
 import { isDefined, isUndefined, toMany } from "@mjt-engine/object";
 import * as msgpack from "@msgpack/msgpack";
-import { RequestStrategy, connect } from "nats.ws";
+import { RequestStrategy, connect, credsAuthenticator } from "nats.ws";
 import { connectListenerToSubscription } from "./connectListenerToSubscription";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
-export const createConnection = async ({ server, token, subscribers = {}, options = {}, env = {}, }) => {
+export const createConnection = async ({ server, creds, subscribers = {}, options = {}, env = {}, }) => {
     const { log = () => { } } = options;
     log("createConnection: server: ", server);
-    const connection = await connect({ servers: [...toMany(server)], token });
+    const connection = await connect({
+        servers: [...toMany(server)],
+        authenticator: credsAuthenticator(new TextEncoder().encode(creds)),
+    });
     const entries = Object.entries(subscribers);
     log("createConnection: entries: ", entries);
     for (const [subject, listener] of entries) {
