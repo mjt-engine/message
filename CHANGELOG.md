@@ -1,6 +1,9 @@
 # Changelog
 
 
+## 2025-01-12
+- added token auth option ([ae29374](https://github.com/mjt-engine/message/commit/ae293741bce6f1d8bb3e419ec861c84612253454)) by Matt Taylor
+
 ## 2025-01-11
 - removed token added creds for MQ auth ([ab2f3e0](https://github.com/mjt-engine/message/commit/ab2f3e05a3f1ef36612dd1b78485c09fe2100109)) by Matt Taylor
 - added token to connection config ([89a9ffb](https://github.com/mjt-engine/message/commit/89a9ffb4e4b3bcb5b0d696b01fb56421eb4dd586)) by Matt Taylor
