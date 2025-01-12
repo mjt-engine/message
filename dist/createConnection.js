@@ -3,12 +3,15 @@ import * as msgpack from "@msgpack/msgpack";
 import { RequestStrategy, connect, credsAuthenticator } from "nats.ws";
 import { connectListenerToSubscription } from "./connectListenerToSubscription";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
-export const createConnection = async ({ server, creds, subscribers = {}, options = {}, env = {}, }) => {
+export const createConnection = async ({ server, creds, token, subscribers = {}, options = {}, env = {}, }) => {
     const { log = () => { } } = options;
     log("createConnection: server: ", server);
     const connection = await connect({
         servers: [...toMany(server)],
-        authenticator: credsAuthenticator(new TextEncoder().encode(creds)),
+        authenticator: isDefined(creds)
+            ? credsAuthenticator(new TextEncoder().encode(creds))
+            : undefined,
+        token: token,
     });
     const entries = Object.entries(subscribers);
     log("createConnection: entries: ", entries);

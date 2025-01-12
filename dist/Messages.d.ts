@@ -1,8 +1,9 @@
 export declare const Messages: {
-    createConnection: <CM extends import("./ConnectionMessageTypes").ConnectionMap, E extends Record<string, string> = Record<string, string>>({ server, creds, subscribers, options, env, }: {
+    createConnection: <CM extends import("./ConnectionMessageTypes").ConnectionMap, E extends Record<string, string> = Record<string, string>>({ server, creds, token, subscribers, options, env, }: {
         server: string[] | string;
         subscribers?: Partial<{ [k in keyof CM]: import("./ConnectionMessageTypes").ConnectionListener<CM, k, E>; }>;
         creds?: string;
+        token?: string;
         options?: Partial<{
             log: (message: string, extra: unknown) => void;
         }>;

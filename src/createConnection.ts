@@ -15,6 +15,7 @@ export const createConnection = async <
 >({
   server,
   creds,
+  token,
   subscribers = {},
   options = {},
   env = {},
@@ -22,6 +23,7 @@ export const createConnection = async <
   server: string[] | string;
   subscribers?: Partial<{ [k in keyof CM]: ConnectionListener<CM, k, E> }>;
   creds?: string;
+  token?: string;
   options?: Partial<{
     log: (message: string, extra: unknown) => void;
   }>;
@@ -31,7 +33,10 @@ export const createConnection = async <
   log("createConnection: server: ", server);
   const connection = await connect({
     servers: [...toMany(server)],
-    authenticator: credsAuthenticator(new TextEncoder().encode(creds)),
+    authenticator: isDefined(creds)
+      ? credsAuthenticator(new TextEncoder().encode(creds))
+      : undefined,
+    token: token,
   });
   const entries = Object.entries(subscribers);
   log("createConnection: entries: ", entries);
