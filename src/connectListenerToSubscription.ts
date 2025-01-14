@@ -1,5 +1,4 @@
 import { isDefined, isUndefined } from "@mjt-engine/object";
-import * as msgpack from "@msgpack/msgpack";
 import { type NatsConnection, headers as natsHeaders } from "nats.ws";
 import type {
   ConnectionListener,
@@ -7,6 +6,7 @@ import type {
 } from "./ConnectionMessageTypes";
 import { errorToErrorDetail } from "./error/errorToErrorDetail";
 import { natsHeadersToRecord } from "./natsHeadersToRecord";
+import { Bytes } from "@mjt-engine/byte";
 
 export const connectListenerToSubscription = async <
   CM extends ConnectionMap,
@@ -31,9 +31,7 @@ export const connectListenerToSubscription = async <
 
   for await (const message of subscription) {
     try {
-      const detail = msgpack.decode(
-        new Uint8Array(message.data)
-      ) as CM[S]["request"];
+      const detail = Bytes.msgPackToObject<CM[S]["request"]>(message.data);
       const requestHeaders = natsHeadersToRecord(
         message.headers
       ) as CM[S]["headers"];
@@ -71,7 +69,7 @@ export const connectListenerToSubscription = async <
           connection.publish(message.reply!);
           return;
         }
-        const responseMsg = msgpack.encode(response);
+        const responseMsg = Bytes.toMsgPack(response);
         message.respond(responseMsg, {
           headers: responseHeaders,
         });
@@ -99,7 +97,7 @@ export const connectListenerToSubscription = async <
             responseHeaders.set(key, value);
           }
         }
-        message.respond(msgpack.encode(errorDetail), {
+        message.respond(Bytes.toMsgPack(errorDetail), {
           headers: responseHeaders,
         });
       };
@@ -123,7 +121,7 @@ export const connectListenerToSubscription = async <
         extra: [message.subject],
       });
       const hs = natsHeaders(500, "Listener Error");
-      message.respond(msgpack.encode(errorDetail), {
+      message.respond(Bytes.toMsgPack(errorDetail), {
         headers: hs,
       });
     }

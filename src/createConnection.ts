@@ -1,5 +1,5 @@
+import { Bytes } from "@mjt-engine/byte";
 import { isDefined, isUndefined, toMany } from "@mjt-engine/object";
-import * as msgpack from "@msgpack/msgpack";
 import { RequestStrategy, connect, credsAuthenticator } from "nats.ws";
 import type {
   ConnectionListener,
@@ -77,7 +77,7 @@ export const createConnection = async <
         onResponse,
         signal,
       } = props;
-      const requestMsg = msgpack.encode(request);
+      const requestMsg = Bytes.toMsgPack(request);
       const { timeoutMs = 60 * 1000 } = options;
 
       const hs = recordToNatsHeaders(headers);
@@ -110,14 +110,15 @@ export const createConnection = async <
           break;
         }
 
-        const responseData = msgpack.decode(new Uint8Array(resp.data));
+        const responseData = Bytes.msgPackToObject<CM[S]["response"]>(
+          new Uint8Array(resp.data)
+        );
         if (resp.headers?.hasError) {
           throw new Error(`Error response on subject: ${subject as string}`, {
             cause: responseData,
           });
         }
-        await onResponse(responseData as CM[S]["response"]);
-        // return responseData as CM[S]["response"];
+        await onResponse(responseData);
       }
     },
 
@@ -128,7 +129,7 @@ export const createConnection = async <
       options?: Partial<{ timeoutMs: number }>;
     }): Promise<CM[S]["response"]> => {
       const { request, subject, headers, options = {} } = props;
-      const requestMsg = msgpack.encode(request);
+      const requestMsg = Bytes.toMsgPack(request);
       const { timeoutMs = 60 * 1000 } = options;
 
       const hs = recordToNatsHeaders(headers);
@@ -138,13 +139,13 @@ export const createConnection = async <
         headers: hs,
       });
 
-      const responseData = msgpack.decode(new Uint8Array(resp.data));
+      const responseData = Bytes.msgPackToObject<CM[S]["response"]>(resp.data);
       if (resp.headers?.hasError) {
         throw new Error(`Error response on subject: ${subject as string}`, {
           cause: responseData,
         });
       }
-      return responseData as CM[S]["response"];
+      return responseData;
     },
   };
 };

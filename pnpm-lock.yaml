@@ -8,12 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@mjt-engine/byte':
+        specifier: github:mjt-engine/byte
+        version: https://codeload.github.com/mjt-engine/byte/tar.gz/1d34662cd076710982a0c9e91ea4190a7af0573d
       '@mjt-engine/object':
         specifier: github:mjt-engine/object
         version: https://codeload.github.com/mjt-engine/object/tar.gz/97a0de89779baff175fd00cc5e7fc1d514aadeba
-      '@msgpack/msgpack':
-        specifier: ^3.0.0-beta2
-        version: 3.0.0-beta2
       nats.ws:
         specifier: ^1.27.0
         version: 1.29.2
@@ -174,13 +174,47 @@ packages:
   '@gerrit0/mini-shiki@1.26.1':
     resolution: {integrity: sha512-gHFUvv9f1fU2Piou/5Y7Sx5moYxcERbC7CXc6rkDLQTUBg5Dgg9L4u29/nHqfoQ3Y9R0h0BcOhd14uOEZIBP7Q==}
 
+  '@mjt-engine/assert@https://codeload.github.com/mjt-engine/assert/tar.gz/2f8346fd25648ce0af84a7ccc6bb32525770b207':
+    resolution: {tarball: https://codeload.github.com/mjt-engine/assert/tar.gz/2f8346fd25648ce0af84a7ccc6bb32525770b207}
+    version: 2025.1.12-1128
+
+  '@mjt-engine/byte@https://codeload.github.com/mjt-engine/byte/tar.gz/1d34662cd076710982a0c9e91ea4190a7af0573d':
+    resolution: {tarball: https://codeload.github.com/mjt-engine/byte/tar.gz/1d34662cd076710982a0c9e91ea4190a7af0573d}
+    version: 2025.1.12-1138
+
   '@mjt-engine/object@https://codeload.github.com/mjt-engine/object/tar.gz/97a0de89779baff175fd00cc5e7fc1d514aadeba':
     resolution: {tarball: https://codeload.github.com/mjt-engine/object/tar.gz/97a0de89779baff175fd00cc5e7fc1d514aadeba}
     version: 2025.1.8-1148
 
-  '@msgpack/msgpack@3.0.0-beta2':
-    resolution: {integrity: sha512-y+l1PNV0XDyY8sM3YtuMLK5vE3/hkfId+Do8pLo/OPxfxuFAUwcGz3oiiUuV46/aBpwTzZ+mRWVMtlSKbradhw==}
-    engines: {node: '>= 14'}
+  '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.3':
+    resolution: {integrity: sha512-QZHtlVgbAdy2zAqNA9Gu1UpIuI8Xvsd1v8ic6B2pZmeFnFcMWiPLfWXh7TVw4eGEZ/C9TH281KwhVoeQUKbyjw==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@msgpackr-extract/msgpackr-extract-darwin-x64@3.0.3':
+    resolution: {integrity: sha512-mdzd3AVzYKuUmiWOQ8GNhl64/IoFGol569zNRdkLReh6LRLHOXxU4U8eq0JwaD8iFHdVGqSy4IjFL4reoWCDFw==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@msgpackr-extract/msgpackr-extract-linux-arm64@3.0.3':
+    resolution: {integrity: sha512-YxQL+ax0XqBJDZiKimS2XQaf+2wDGVa1enVRGzEvLLVFeqa5kx2bWbtcSXgsxjQB7nRqqIGFIcLteF/sHeVtQg==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@msgpackr-extract/msgpackr-extract-linux-arm@3.0.3':
+    resolution: {integrity: sha512-fg0uy/dG/nZEXfYilKoRe7yALaNmHoYeIoJuJ7KJ+YyU2bvY8vPv27f7UKhGRpY6euFYqEVhxCFZgAUNQBM3nw==}
+    cpu: [arm]
+    os: [linux]
+
+  '@msgpackr-extract/msgpackr-extract-linux-x64@3.0.3':
+    resolution: {integrity: sha512-cvwNfbP07pKUfq1uH+S6KJ7dT9K8WOE4ZiAcsrSes+UY55E/0jLYc+vq+DO7jlmqRb5zAggExKm0H7O/CBaesg==}
+    cpu: [x64]
+    os: [linux]
+
+  '@msgpackr-extract/msgpackr-extract-win32-x64@3.0.3':
+    resolution: {integrity: sha512-x0fWaQtYp4E6sktbsdAqnehxDgEc/VwM7uLsRCYWaiGu0ykYdZPiS8zCWdnjHwyiumousxfBm4SO31eXqwEZhQ==}
+    cpu: [x64]
+    os: [win32]
 
   '@shikijs/engine-oniguruma@1.26.1':
     resolution: {integrity: sha512-F5XuxN1HljLuvfXv7d+mlTkV7XukC1cawdtOo+7pKgPD83CAB1Sf8uHqP3PK0u7njFH0ZhoXE1r+0JzEgAQ+kg==}
@@ -279,6 +313,10 @@ packages:
 
   des.js@1.1.0:
     resolution: {integrity: sha512-r17GxjhUCjSRy8aiJpr8/UadFIzMzJGexI3Nmz4ADi9LYSFx4gTBp80+NaX/YsXWWLhpZ7v/v/ubEc/bCNfKwg==}
+
+  detect-libc@2.0.3:
+    resolution: {integrity: sha512-bwy0MGW55bG41VqxxypOsdSdGqLwXPI/focwgTYCFMbdUiBAxLg9CFzG08sz2aqzknwiX7Hkl0bQENjg8iLByw==}
+    engines: {node: '>=8'}
 
   diffie-hellman@5.0.3:
     resolution: {integrity: sha512-kqag/Nl+f3GwyK25fhUMYj81BUOrZ9IuJsjIcDE5icNM9FJHAVm3VcUDxdLPoQtTuUylWm6ZIknYJwwaPxsUzg==}
@@ -400,12 +438,23 @@ packages:
     resolution: {integrity: sha512-G6T0ZX48xgozx7587koeX9Ys2NYy6Gmv//P89sEte9V9whIapMNF4idKxnW2QtCcLiTWlb/wfCabAtAFWhhBow==}
     engines: {node: '>=16 || 14 >=14.17'}
 
+  msgpackr-extract@3.0.3:
+    resolution: {integrity: sha512-P0efT1C9jIdVRefqjzOQ9Xml57zpOXnIuS+csaB4MdZbTdmGDLo8XhzBG1N7aO11gKDDkJvBLULeFTo46wwreA==}
+    hasBin: true
+
+  msgpackr@1.11.2:
+    resolution: {integrity: sha512-F9UngXRlPyWCDEASDpTf6c9uNhGPTqnTeLVt7bN+bU1eajoR/8V9ys2BRaV5C/e5ihE6sJ9uPIKaYt6bFuO32g==}
+
   nats.ws@1.29.2:
     resolution: {integrity: sha512-dJf7aWp+5+8LwWEhgoTMc3pvfz5JlhA0yWtXKcTMDxUe43mHvgpvDaPnLyHQNL2LoDpdkjgOG176i5IeHBDlqg==}
 
   nkeys.js@1.1.0:
     resolution: {integrity: sha512-tB/a0shZL5UZWSwsoeyqfTszONTt4k2YS0tuQioMOD180+MbombYVgzDUYHlx+gejYK6rgf08n/2Df99WY0Sxg==}
     engines: {node: '>=10.0.0'}
+
+  node-gyp-build-optional-packages@5.2.2:
+    resolution: {integrity: sha512-s+w+rBWnpTMwSFbaE0UXsRlg7hU4FjekKU4eyAih5T8nJuNZT1nNsskXpxmeqSK9UzkBl6UgRlnKc8hz8IEqOw==}
+    hasBin: true
 
   object-keys@1.1.1:
     resolution: {integrity: sha512-NuAESUOUMrlIXOfHKzD6bpPu3tYt3xvjNdRIQ+FeT0lNb4K8WR70CaDxhuNguS2XG+GjkyMwOzsN5ZktImfhLA==}
@@ -561,12 +610,35 @@ snapshots:
       '@shikijs/types': 1.26.1
       '@shikijs/vscode-textmate': 10.0.1
 
+  '@mjt-engine/assert@https://codeload.github.com/mjt-engine/assert/tar.gz/2f8346fd25648ce0af84a7ccc6bb32525770b207': {}
+
+  '@mjt-engine/byte@https://codeload.github.com/mjt-engine/byte/tar.gz/1d34662cd076710982a0c9e91ea4190a7af0573d':
+    dependencies:
+      '@mjt-engine/assert': https://codeload.github.com/mjt-engine/assert/tar.gz/2f8346fd25648ce0af84a7ccc6bb32525770b207
+      msgpackr: 1.11.2
+
   '@mjt-engine/object@https://codeload.github.com/mjt-engine/object/tar.gz/97a0de89779baff175fd00cc5e7fc1d514aadeba':
     dependencies:
       '@sinclair/typebox': 0.33.22
       json-stable-stringify: 1.2.1
 
-  '@msgpack/msgpack@3.0.0-beta2': {}
+  '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.3':
+    optional: true
+
+  '@msgpackr-extract/msgpackr-extract-darwin-x64@3.0.3':
+    optional: true
+
+  '@msgpackr-extract/msgpackr-extract-linux-arm64@3.0.3':
+    optional: true
+
+  '@msgpackr-extract/msgpackr-extract-linux-arm@3.0.3':
+    optional: true
+
+  '@msgpackr-extract/msgpackr-extract-linux-x64@3.0.3':
+    optional: true
+
+  '@msgpackr-extract/msgpackr-extract-win32-x64@3.0.3':
+    optional: true
 
   '@shikijs/engine-oniguruma@1.26.1':
     dependencies:
@@ -722,6 +794,9 @@ snapshots:
     dependencies:
       inherits: 2.0.4
       minimalistic-assert: 1.0.1
+
+  detect-libc@2.0.3:
+    optional: true
 
   diffie-hellman@5.0.3:
     dependencies:
@@ -888,6 +963,22 @@ snapshots:
     dependencies:
       brace-expansion: 2.0.1
 
+  msgpackr-extract@3.0.3:
+    dependencies:
+      node-gyp-build-optional-packages: 5.2.2
+    optionalDependencies:
+      '@msgpackr-extract/msgpackr-extract-darwin-arm64': 3.0.3
+      '@msgpackr-extract/msgpackr-extract-darwin-x64': 3.0.3
+      '@msgpackr-extract/msgpackr-extract-linux-arm': 3.0.3
+      '@msgpackr-extract/msgpackr-extract-linux-arm64': 3.0.3
+      '@msgpackr-extract/msgpackr-extract-linux-x64': 3.0.3
+      '@msgpackr-extract/msgpackr-extract-win32-x64': 3.0.3
+    optional: true
+
+  msgpackr@1.11.2:
+    optionalDependencies:
+      msgpackr-extract: 3.0.3
+
   nats.ws@1.29.2:
     optionalDependencies:
       nkeys.js: 1.1.0
@@ -895,6 +986,11 @@ snapshots:
   nkeys.js@1.1.0:
     dependencies:
       tweetnacl: 1.0.3
+    optional: true
+
+  node-gyp-build-optional-packages@5.2.2:
+    dependencies:
+      detect-libc: 2.0.3
     optional: true
 
   object-keys@1.1.1: {}

@@ -1,5 +1,5 @@
+import { Bytes } from "@mjt-engine/byte";
 import { isDefined, isUndefined, toMany } from "@mjt-engine/object";
-import * as msgpack from "@msgpack/msgpack";
 import { RequestStrategy, connect, credsAuthenticator } from "nats.ws";
 import { connectListenerToSubscription } from "./connectListenerToSubscription";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
@@ -37,7 +37,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
         },
         requestMany: async (props) => {
             const { request, subject, headers, options = {}, onResponse, signal, } = props;
-            const requestMsg = msgpack.encode(request);
+            const requestMsg = Bytes.toMsgPack(request);
             const { timeoutMs = 60 * 1000 } = options;
             const hs = recordToNatsHeaders(headers);
             if (isDefined(signal)) {
@@ -60,26 +60,25 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                 if (isUndefined(resp.data) || resp.data.byteLength === 0) {
                     break;
                 }
-                const responseData = msgpack.decode(new Uint8Array(resp.data));
+                const responseData = Bytes.msgPackToObject(new Uint8Array(resp.data));
                 if (resp.headers?.hasError) {
                     throw new Error(`Error response on subject: ${subject}`, {
                         cause: responseData,
                     });
                 }
                 await onResponse(responseData);
-                // return responseData as CM[S]["response"];
             }
         },
         request: async (props) => {
             const { request, subject, headers, options = {} } = props;
-            const requestMsg = msgpack.encode(request);
+            const requestMsg = Bytes.toMsgPack(request);
             const { timeoutMs = 60 * 1000 } = options;
             const hs = recordToNatsHeaders(headers);
             const resp = await connection.request(subject, requestMsg, {
                 timeout: timeoutMs,
                 headers: hs,
             });
-            const responseData = msgpack.decode(new Uint8Array(resp.data));
+            const responseData = Bytes.msgPackToObject(resp.data);
             if (resp.headers?.hasError) {
                 throw new Error(`Error response on subject: ${subject}`, {
                     cause: responseData,

@@ -9,7 +9,6 @@
     "docs": "typedoc src/index.ts",
     "build-esbuild": "npx esbuild ./src/index.ts --bundle --target=es2022 '--external:crypto' --outfile=dist/index.js",
     "build": "tsc -b",
-
     "build-docs": "pnpm run build && pnpm run docs",
     "changelog": "./scripts/changes.sh > CHANGELOG.md",
     "changelog-version": "pnpm run changelog && ./scripts/version.sh",
@@ -19,8 +18,8 @@
   "author": "Matt Taylor (https://mjt.dev)",
   "license": "MIT",
   "dependencies": {
-    "@mjt-engine/object": "github:mjt-engine/object",
-    "@msgpack/msgpack": "^3.0.0-beta2"
+    "@mjt-engine/byte": "github:mjt-engine/byte",
+    "@mjt-engine/object": "github:mjt-engine/object"
   },
   "peerDependencies": {
     "nats.ws": "^1.27.0"

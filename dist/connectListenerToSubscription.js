@@ -1,15 +1,15 @@
 import { isDefined, isUndefined } from "@mjt-engine/object";
-import * as msgpack from "@msgpack/msgpack";
 import { headers as natsHeaders } from "nats.ws";
 import { errorToErrorDetail } from "./error/errorToErrorDetail";
 import { natsHeadersToRecord } from "./natsHeadersToRecord";
+import { Bytes } from "@mjt-engine/byte";
 export const connectListenerToSubscription = async ({ connection, subject, listener, options = {}, env = {}, }) => {
     const { log = () => { } } = options;
     log("connectListenerToSubscription: subject: ", subject);
     const subscription = connection.subscribe(subject);
     for await (const message of subscription) {
         try {
-            const detail = msgpack.decode(new Uint8Array(message.data));
+            const detail = Bytes.msgPackToObject(message.data);
             const requestHeaders = natsHeadersToRecord(message.headers);
             const abortController = new AbortController();
             if (isDefined(requestHeaders?.["abort-subject"])) {
@@ -35,7 +35,7 @@ export const connectListenerToSubscription = async ({ connection, subject, liste
                     connection.publish(message.reply);
                     return;
                 }
-                const responseMsg = msgpack.encode(response);
+                const responseMsg = Bytes.toMsgPack(response);
                 message.respond(responseMsg, {
                     headers: responseHeaders,
                 });
@@ -51,7 +51,7 @@ export const connectListenerToSubscription = async ({ connection, subject, liste
                         responseHeaders.set(key, value);
                     }
                 }
-                message.respond(msgpack.encode(errorDetail), {
+                message.respond(Bytes.toMsgPack(errorDetail), {
                     headers: responseHeaders,
                 });
             };
@@ -76,7 +76,7 @@ export const connectListenerToSubscription = async ({ connection, subject, liste
                 extra: [message.subject],
             });
             const hs = natsHeaders(500, "Listener Error");
-            message.respond(msgpack.encode(errorDetail), {
+            message.respond(Bytes.toMsgPack(errorDetail), {
                 headers: hs,
             });
         }
