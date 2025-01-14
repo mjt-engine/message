@@ -1,6 +1,9 @@
 # Changelog
 
 
+## 2025-01-14
+- use byte module for msgpack ([0ad88c4](https://github.com/mjt-engine/message/commit/0ad88c4410e341d06b7b1f03142438e3aedce585)) by Matt Taylor
+
 ## 2025-01-12
 - added token auth option ([ae29374](https://github.com/mjt-engine/message/commit/ae293741bce6f1d8bb3e419ec861c84612253454)) by Matt Taylor
 
