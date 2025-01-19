@@ -1,10 +1,11 @@
 {
   "name": "@mjt-engine/message",
-  "version": "2025.1.14-1114",
+  "version": "2025.1.19-1221",
   "sideEffects": false,
   "description": "mjtdev message",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "type": "module",
   "scripts": {
     "docs": "typedoc src/index.ts",
     "build-esbuild": "npx esbuild ./src/index.ts --bundle --target=es2022 '--external:crypto' --outfile=dist/index.js",
