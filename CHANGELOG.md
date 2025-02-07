@@ -1,6 +1,9 @@
 # Changelog
 
 
+## 2025-02-07
+- attempt to make createConnection portable by exporting NatsConnection type alias ([3282507](https://github.com/mjt-engine/message/commit/32825078521f6acb0237f0882a40ca775f5d4ac4)) by Matt Taylor
+
 ## 2025-01-14
 - use byte module for msgpack ([0ad88c4](https://github.com/mjt-engine/message/commit/0ad88c4410e341d06b7b1f03142438e3aedce585)) by Matt Taylor
 

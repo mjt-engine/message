@@ -1,4 +1,6 @@
+import { type NatsConnection } from "nats.ws";
 import type { ConnectionListener, ConnectionMap } from "./ConnectionMessageTypes";
+export type MessageConnection = NatsConnection;
 export declare const createConnection: <CM extends ConnectionMap, E extends Record<string, string> = Record<string, string>>({ server, creds, token, subscribers, options, env, }: {
     server: string[] | string;
     subscribers?: Partial<{ [k in keyof CM]: ConnectionListener<CM, k, E>; }>;
