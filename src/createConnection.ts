@@ -66,11 +66,15 @@ export const createConnection = async <
 
   return {
     connection: {
-      close: () => connection.close() as Promise<void>,
-      drain: () => connection.drain() as Promise<void>,
-      flush: () => connection.flush() as Promise<void>,
-      stats: () => connection.stats() as MessageConnectionStats,
-      status: () => connection.status() as AsyncIterable<Status>,
+      close: () => connection.close(),
+      drain: () => connection.drain(),
+      flush: () => connection.flush(),
+      stats: () => {
+        console.log(connection.stats());
+      },
+      status: () => {
+        console.log(connection.status());
+      },
     },
     requestMany: async <S extends keyof CM>(props: {
       subject: S;
