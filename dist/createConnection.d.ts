@@ -1,6 +1,8 @@
-import { type NatsConnection } from "nats.ws";
+import { type NatsConnection, type Stats, type Status } from "nats.ws";
 import type { ConnectionListener, ConnectionMap } from "./ConnectionMessageTypes";
 export type MessageConnection = NatsConnection;
+export type MessageConnectionStats = Stats;
+export type MessageConnectionStatus = Status;
 export declare const createConnection: <CM extends ConnectionMap, E extends Record<string, string> = Record<string, string>>({ server, creds, token, subscribers, options, env, }: {
     server: string[] | string;
     subscribers?: Partial<{ [k in keyof CM]: ConnectionListener<CM, k, E>; }>;
@@ -15,8 +17,8 @@ export declare const createConnection: <CM extends ConnectionMap, E extends Reco
         close: () => Promise<void>;
         drain: () => Promise<void>;
         flush: () => Promise<void>;
-        stats: () => import("nats.ws").Stats;
-        status: () => AsyncIterable<import("nats.ws").Status>;
+        stats: () => MessageConnectionStats;
+        status: () => AsyncIterable<Status>;
     };
     requestMany: <S extends keyof CM>(props: {
         subject: S;
