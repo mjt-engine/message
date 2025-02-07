@@ -1,6 +1,11 @@
 import { Bytes } from "@mjt-engine/byte";
 import { isDefined, isUndefined, toMany } from "@mjt-engine/object";
-import { RequestStrategy, connect, credsAuthenticator } from "nats.ws";
+import {
+  RequestStrategy,
+  connect,
+  credsAuthenticator,
+  type NatsConnection,
+} from "nats.ws";
 import type {
   ConnectionListener,
   ConnectionMap,
@@ -8,6 +13,8 @@ import type {
 } from "./ConnectionMessageTypes";
 import { connectListenerToSubscription } from "./connectListenerToSubscription";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
+
+export type MessageConnection = NatsConnection;
 
 export const createConnection = async <
   CM extends ConnectionMap,
@@ -31,7 +38,7 @@ export const createConnection = async <
 }) => {
   const { log = () => {} } = options;
   log("createConnection: server: ", server);
-  const connection = await connect({
+  const connection: MessageConnection = await connect({
     servers: [...toMany(server)],
     authenticator: isDefined(creds)
       ? credsAuthenticator(new TextEncoder().encode(creds))
