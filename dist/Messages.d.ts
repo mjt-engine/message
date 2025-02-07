@@ -13,8 +13,8 @@ export declare const Messages: {
             close: () => Promise<void>;
             drain: () => Promise<void>;
             flush: () => Promise<void>;
-            stats: () => import("./createConnection").MessageConnectionStats;
-            status: () => AsyncIterable<import("nats.ws").Status>;
+            stats: () => void;
+            status: () => void;
         };
         requestMany: <S extends keyof CM>(props: {
             subject: S;

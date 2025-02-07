@@ -17,8 +17,8 @@ export declare const createConnection: <CM extends ConnectionMap, E extends Reco
         close: () => Promise<void>;
         drain: () => Promise<void>;
         flush: () => Promise<void>;
-        stats: () => MessageConnectionStats;
-        status: () => AsyncIterable<Status>;
+        stats: () => void;
+        status: () => void;
     };
     requestMany: <S extends keyof CM>(props: {
         subject: S;

@@ -2,6 +2,7 @@
 
 
 ## 2025-02-07
+- attempt to make createConnection portable by not retuning status and instead logging ([2b2f0cd](https://github.com/mjt-engine/message/commit/2b2f0cd2b14ccfa5835f5dd998414c5bf6634532)) by Matt Taylor
 - attempt to make createConnection portable by exporting Nats status types type aliases ([21553bc](https://github.com/mjt-engine/message/commit/21553bc88c4126c918afda10446c47e83efe5626)) by Matt Taylor
 - attempt to make createConnection portable by exporting NatsConnection type alias ([3282507](https://github.com/mjt-engine/message/commit/32825078521f6acb0237f0882a40ca775f5d4ac4)) by Matt Taylor
 
