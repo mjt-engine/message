@@ -5,6 +5,8 @@ import {
   connect,
   credsAuthenticator,
   type NatsConnection,
+  type Stats,
+  type Status,
 } from "nats.ws";
 import type {
   ConnectionListener,
@@ -15,6 +17,8 @@ import { connectListenerToSubscription } from "./connectListenerToSubscription";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
 
 export type MessageConnection = NatsConnection;
+export type MessageConnectionStats = Stats;
+export type MessageConnectionStatus = Status;
 
 export const createConnection = async <
   CM extends ConnectionMap,
@@ -62,11 +66,11 @@ export const createConnection = async <
 
   return {
     connection: {
-      close: () => connection.close(),
-      drain: () => connection.drain(),
-      flush: () => connection.flush(),
-      stats: () => connection.stats(),
-      status: () => connection.status(),
+      close: () => connection.close() as Promise<void>,
+      drain: () => connection.drain() as Promise<void>,
+      flush: () => connection.flush() as Promise<void>,
+      stats: () => connection.stats() as MessageConnectionStats,
+      status: () => connection.status() as AsyncIterable<Status>,
     },
     requestMany: async <S extends keyof CM>(props: {
       subject: S;
