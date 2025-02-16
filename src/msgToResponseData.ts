@@ -2,9 +2,10 @@ import { Bytes } from "@mjt-engine/byte";
 import type { Msg } from "nats.ws";
 import { errorToErrorDetail } from "./error/errorToErrorDetail";
 
-
 export const msgToResponseData = async ({
-  msg, subject, request,
+  msg,
+  subject,
+  request,
 }: {
   msg: Msg;
   subject: unknown;
@@ -19,4 +20,5 @@ export const msgToResponseData = async ({
       }),
     });
   }
+  return responseData;
 };
