@@ -2,6 +2,7 @@
 
 
 ## 2025-02-16
+- fix bug with msgToResponseData not returning data ([e05ff91](https://github.com/mjt-engine/message/commit/e05ff910779f91efe5691caae913fa0f971923d0)) by Matt Taylor
 - more detailed errorText ([b64acf5](https://github.com/mjt-engine/message/commit/b64acf5883f03649829533d46d43d0829922ea6f)) by Matt Taylor
 - await errors because we allow Response type for errors that need to be awated to get text ([8f3eeb4](https://github.com/mjt-engine/message/commit/8f3eeb44b0fa3c8544afbec02eb0caa03abb1470)) by Matt Taylor
 - export Errors sub-module, refactor error handling to be more DRY and correct ([22d8540](https://github.com/mjt-engine/message/commit/22d854067ccac56469dc66eb05a20b6f30f0487d)) by Matt Taylor

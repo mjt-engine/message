@@ -10,5 +10,6 @@ export const msgToResponseData = async ({ msg, subject, request, }) => {
             }),
         });
     }
+    return responseData;
 };
 //# sourceMappingURL=msgToResponseData.js.map

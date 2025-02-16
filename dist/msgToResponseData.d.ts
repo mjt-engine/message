@@ -3,4 +3,4 @@ export declare const msgToResponseData: ({ msg, subject, request, }: {
     msg: Msg;
     subject: unknown;
     request: unknown;
-}) => Promise<void>;
+}) => Promise<unknown>;
