@@ -2,6 +2,7 @@
 
 
 ## 2025-02-16
+- log conforms more to console.log and also handles errors a touch better ([6fd9984](https://github.com/mjt-engine/message/commit/6fd99840482ed19c6daa9ee288606a4eeb14461e)) by Matt Taylor
 - fix bug with msgToResponseData not returning data ([e05ff91](https://github.com/mjt-engine/message/commit/e05ff910779f91efe5691caae913fa0f971923d0)) by Matt Taylor
 - more detailed errorText ([b64acf5](https://github.com/mjt-engine/message/commit/b64acf5883f03649829533d46d43d0829922ea6f)) by Matt Taylor
 - await errors because we allow Response type for errors that need to be awated to get text ([8f3eeb4](https://github.com/mjt-engine/message/commit/8f3eeb44b0fa3c8544afbec02eb0caa03abb1470)) by Matt Taylor

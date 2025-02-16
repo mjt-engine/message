@@ -5,7 +5,7 @@ export declare const Messages: {
         creds?: string;
         token?: string;
         options?: Partial<{
-            log: (message: string, extra: unknown) => void;
+            log: (message: unknown, ...extra: unknown[]) => void;
         }>;
         env?: Partial<E>;
     }) => Promise<{
@@ -40,7 +40,7 @@ export declare const Messages: {
         connection: import("nats.ws").NatsConnection;
         listener: import("./ConnectionMessageTypes").ConnectionListener<CM, S, E>;
         options?: Partial<{
-            log: (message: string, extra: unknown) => void;
+            log: (message: unknown, ...extrap: unknown[]) => void;
         }>;
         env?: Partial<E>;
     }) => Promise<void>;

@@ -9,7 +9,7 @@ export declare const createConnection: <CM extends ConnectionMap, E extends Reco
     creds?: string;
     token?: string;
     options?: Partial<{
-        log: (message: string, extra: unknown) => void;
+        log: (message: unknown, ...extra: unknown[]) => void;
     }>;
     env?: Partial<E>;
 }) => Promise<{

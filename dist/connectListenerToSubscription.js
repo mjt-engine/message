@@ -69,11 +69,11 @@ export const connectListenerToSubscription = async ({ connection, subject, liste
             send(result);
         }
         catch (error) {
-            log("connectListenerToSubscription: error", error);
             const errorDetail = await errorToErrorDetail({
                 error,
                 extra: [message.subject],
             });
+            log(errorDetail);
             const hs = natsHeaders(500, "Listener Error");
             message.respond(Bytes.toMsgPack(errorDetail), {
                 headers: hs,

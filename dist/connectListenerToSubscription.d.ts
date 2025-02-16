@@ -5,7 +5,7 @@ export declare const connectListenerToSubscription: <CM extends ConnectionMap, S
     connection: NatsConnection;
     listener: ConnectionListener<CM, S, E>;
     options?: Partial<{
-        log: (message: string, extra: unknown) => void;
+        log: (message: unknown, ...extrap: unknown[]) => void;
     }>;
     env?: Partial<E>;
 }) => Promise<void>;
