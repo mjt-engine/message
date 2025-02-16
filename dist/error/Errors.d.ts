@@ -5,5 +5,5 @@ export declare const Errors: {
         extra?: unknown[];
     }) => Promise<import("./ErrorDetail").ErrorDetail>;
     errorToText: (error: unknown) => string;
-    errorToTextAsync: (error: unknown) => Promise<string | undefined>;
+    errorToTextAsync: (error: unknown) => Promise<string>;
 };
