@@ -1,12 +1,6 @@
 import { isDefined } from "@mjt-engine/object";
 import { errorToTextAsync } from "./errorToText";
-
-export type ErrorDetail = {
-  message?: string;
-  stack?: string;
-  extra?: unknown[];
-  cause?: ErrorDetail;
-};
+import type { ErrorDetail } from "./ErrorDetail";
 
 export const errorToErrorDetail = async ({
   error,
