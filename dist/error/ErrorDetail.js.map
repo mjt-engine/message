@@ -1,0 +1,1 @@
+{"version":3,"file":"ErrorDetail.js","sourceRoot":"","sources":["../../src/error/ErrorDetail.ts"],"names":[],"mappings":"","sourcesContent":["\nexport type ErrorDetail = {\n  message?: string;\n  stack?: string;\n  extra?: unknown[];\n  cause?: ErrorDetail;\n};\n"]}

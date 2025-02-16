@@ -1,9 +1,4 @@
-export type ErrorDetail = {
-    message?: string;
-    stack?: string;
-    extra?: unknown[];
-    cause?: ErrorDetail;
-};
+import type { ErrorDetail } from "./ErrorDetail";
 export declare const errorToErrorDetail: ({ error, extra, stack, }: {
     error: unknown;
     stack?: string;

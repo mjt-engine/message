@@ -2,6 +2,7 @@ import { Bytes } from "@mjt-engine/byte";
 import { isDefined, isUndefined, toMany } from "@mjt-engine/object";
 import { RequestStrategy, connect, credsAuthenticator, } from "nats.ws";
 import { connectListenerToSubscription } from "./connectListenerToSubscription";
+import { msgToResponseData } from "./msgToResponseData";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
 export const createConnection = async ({ server, creds, token, subscribers = {}, options = {}, env = {}, }) => {
     const { log = () => { } } = options;
@@ -61,15 +62,10 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                 if (signal?.aborted) {
                     return;
                 }
-                if (resp.headers?.hasError) {
-                    throw new Error(`Error response on subject: ${subject}`, {
-                        cause: request,
-                    });
-                }
                 if (isUndefined(resp.data) || resp.data.byteLength === 0) {
                     break;
                 }
-                const responseData = Bytes.msgPackToObject(new Uint8Array(resp.data));
+                const responseData = msgToResponseData({ msg: resp, subject, request });
                 await onResponse(responseData);
             }
         },
@@ -82,15 +78,10 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                 timeout: timeoutMs,
                 headers: hs,
             });
-            if (resp.headers?.hasError) {
-                throw new Error(`Error response on subject: ${subject}`, {
-                    cause: request,
-                });
-            }
             if (isUndefined(resp.data) || resp.data.byteLength === 0) {
                 return undefined;
             }
-            return Bytes.msgPackToObject(resp.data);
+            return msgToResponseData({ msg: resp, subject, request });
         },
     };
 };

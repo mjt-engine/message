@@ -2,6 +2,7 @@
 
 
 ## 2025-02-16
+- export Errors sub-module, refactor error handling to be more DRY and correct ([22d8540](https://github.com/mjt-engine/message/commit/22d854067ccac56469dc66eb05a20b6f30f0487d)) by Matt Taylor
 - return undefined on empty resp data. re-order error handling to happen sooner, and return request as cause for response errors ([582934c](https://github.com/mjt-engine/message/commit/582934c4ae3be64089bc13324af293f719757827)) by Matt Taylor
 
 ## 2025-02-07
