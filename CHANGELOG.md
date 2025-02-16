@@ -2,6 +2,7 @@
 
 
 ## 2025-02-16
+- await errors because we allow Response type for errors that need to be awated to get text ([8f3eeb4](https://github.com/mjt-engine/message/commit/8f3eeb44b0fa3c8544afbec02eb0caa03abb1470)) by Matt Taylor
 - export Errors sub-module, refactor error handling to be more DRY and correct ([22d8540](https://github.com/mjt-engine/message/commit/22d854067ccac56469dc66eb05a20b6f30f0487d)) by Matt Taylor
 - return undefined on empty resp data. re-order error handling to happen sooner, and return request as cause for response errors ([582934c](https://github.com/mjt-engine/message/commit/582934c4ae3be64089bc13324af293f719757827)) by Matt Taylor
 
