@@ -125,7 +125,11 @@ export const createConnection = async <
         if (isUndefined(resp.data) || resp.data.byteLength === 0) {
           break;
         }
-        const responseData = msgToResponseData({ msg: resp, subject, request });
+        const responseData = await msgToResponseData({
+          msg: resp,
+          subject,
+          request,
+        });
         await onResponse(responseData);
       }
     },

@@ -41,7 +41,6 @@ export const connectListenerToSubscription = async <
         const abortSubscription = connection.subscribe(abortSubject, {
           max: 1,
           callback: () => {
-            console.log("aborting!!!!");
             abortController.abort();
             abortSubscription.unsubscribe();
             message.respond(); // Acknowledge the abort
