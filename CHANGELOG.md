@@ -1,6 +1,9 @@
 # Changelog
 
 
+## 2025-02-16
+- return undefined on empty resp data. re-order error handling to happen sooner, and return request as cause for response errors ([582934c](https://github.com/mjt-engine/message/commit/582934c4ae3be64089bc13324af293f719757827)) by Matt Taylor
+
 ## 2025-02-07
 - attempt to make createConnection portable by not retuning status and instead logging ([2b2f0cd](https://github.com/mjt-engine/message/commit/2b2f0cd2b14ccfa5835f5dd998414c5bf6634532)) by Matt Taylor
 - attempt to make createConnection portable by exporting Nats status types type aliases ([21553bc](https://github.com/mjt-engine/message/commit/21553bc88c4126c918afda10446c47e83efe5626)) by Matt Taylor

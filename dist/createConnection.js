@@ -61,15 +61,15 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                 if (signal?.aborted) {
                     return;
                 }
+                if (resp.headers?.hasError) {
+                    throw new Error(`Error response on subject: ${subject}`, {
+                        cause: request,
+                    });
+                }
                 if (isUndefined(resp.data) || resp.data.byteLength === 0) {
                     break;
                 }
                 const responseData = Bytes.msgPackToObject(new Uint8Array(resp.data));
-                if (resp.headers?.hasError) {
-                    throw new Error(`Error response on subject: ${subject}`, {
-                        cause: responseData,
-                    });
-                }
                 await onResponse(responseData);
             }
         },
@@ -82,13 +82,15 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                 timeout: timeoutMs,
                 headers: hs,
             });
-            const responseData = Bytes.msgPackToObject(resp.data);
             if (resp.headers?.hasError) {
                 throw new Error(`Error response on subject: ${subject}`, {
-                    cause: responseData,
+                    cause: request,
                 });
             }
-            return responseData;
+            if (isUndefined(resp.data) || resp.data.byteLength === 0) {
+                return undefined;
+            }
+            return Bytes.msgPackToObject(resp.data);
         },
     };
 };
