@@ -121,18 +121,17 @@ export const createConnection = async <
         if (signal?.aborted) {
           return;
         }
+        if (resp.headers?.hasError) {
+          throw new Error(`Error response on subject: ${subject as string}`, {
+            cause: request,
+          });
+        }
         if (isUndefined(resp.data) || resp.data.byteLength === 0) {
           break;
         }
-
         const responseData = Bytes.msgPackToObject<CM[S]["response"]>(
           new Uint8Array(resp.data)
         );
-        if (resp.headers?.hasError) {
-          throw new Error(`Error response on subject: ${subject as string}`, {
-            cause: responseData,
-          });
-        }
         await onResponse(responseData);
       }
     },
@@ -153,14 +152,16 @@ export const createConnection = async <
         timeout: timeoutMs,
         headers: hs,
       });
-
-      const responseData = Bytes.msgPackToObject<CM[S]["response"]>(resp.data);
       if (resp.headers?.hasError) {
         throw new Error(`Error response on subject: ${subject as string}`, {
-          cause: responseData,
+          cause: request,
         });
       }
-      return responseData;
+      if (isUndefined(resp.data) || resp.data.byteLength === 0) {
+        return undefined;
+      }
+
+      return Bytes.msgPackToObject<CM[S]["response"]>(resp.data);
     },
   };
 };
