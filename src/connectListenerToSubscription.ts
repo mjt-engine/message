@@ -22,7 +22,7 @@ export const connectListenerToSubscription = async <
   subject: string;
   connection: NatsConnection;
   listener: ConnectionListener<CM, S, E>;
-  options?: Partial<{ log: (message: string, extra: unknown) => void }>;
+  options?: Partial<{ log: (message: unknown, ...extrap: unknown[]) => void }>;
   env?: Partial<E>;
 }) => {
   const { log = () => {} } = options;
@@ -114,11 +114,11 @@ export const connectListenerToSubscription = async <
       }
       send(result);
     } catch (error) {
-      log("connectListenerToSubscription: error", error);
       const errorDetail = await errorToErrorDetail({
         error,
         extra: [message.subject],
       });
+      log(errorDetail);
       const hs = natsHeaders(500, "Listener Error");
       message.respond(Bytes.toMsgPack(errorDetail), {
         headers: hs,

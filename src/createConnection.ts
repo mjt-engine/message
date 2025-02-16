@@ -37,7 +37,7 @@ export const createConnection = async <
   creds?: string;
   token?: string;
   options?: Partial<{
-    log: (message: string, extra: unknown) => void;
+    log: (message: unknown, ...extra: unknown[]) => void;
   }>;
   env?: Partial<E>;
 }) => {
