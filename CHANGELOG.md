@@ -1,6 +1,9 @@
 # Changelog
 
 
+## 2025-02-18
+- DRY up sending message errors, possible bugfix to default exception handling on listeners ([35db18a](https://github.com/mjt-engine/message/commit/35db18a77fbdc03b8f78d5af7333495230329bab)) by Matt Taylor
+
 ## 2025-02-16
 - log conforms more to console.log and also handles errors a touch better ([6fd9984](https://github.com/mjt-engine/message/commit/6fd99840482ed19c6daa9ee288606a4eeb14461e)) by Matt Taylor
 - fix bug with msgToResponseData not returning data ([e05ff91](https://github.com/mjt-engine/message/commit/e05ff910779f91efe5691caae913fa0f971923d0)) by Matt Taylor
