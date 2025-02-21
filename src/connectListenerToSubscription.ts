@@ -43,6 +43,10 @@ export const connectListenerToSubscription = async <
   });
 
   if (isDefined(signal)) {
+    if (signal.aborted) {
+      subscription.unsubscribe();
+      throw new Error("Signal already in aborted state");
+    }
     signal.addEventListener("abort", () => {
       subscription.unsubscribe();
     });
@@ -110,7 +114,11 @@ export const connectListenerToSubscription = async <
         subscription.unsubscribe(maxMessages);
 
       if (isDefined(valueOrError.error)) {
-        throw valueOrError.error;
+        log(
+          "Error: connectListenerToSubscription: valueOrError.error",
+          valueOrError.error
+        );
+        continue;
       }
 
       const result = await listener({
@@ -133,7 +141,7 @@ export const connectListenerToSubscription = async <
         extra: [message.subject],
       });
       log(errorDetail);
-      return sendMessageError(message)(error);
+      sendMessageError(message)(error);
     }
   }
 };
