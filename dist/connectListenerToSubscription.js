@@ -13,6 +13,10 @@ export const connectListenerToSubscription = async ({ connection, subject, liste
         timeout,
     });
     if (isDefined(signal)) {
+        if (signal.aborted) {
+            subscription.unsubscribe();
+            throw new Error("Signal already in aborted state");
+        }
         signal.addEventListener("abort", () => {
             subscription.unsubscribe();
         });
@@ -54,7 +58,8 @@ export const connectListenerToSubscription = async ({ connection, subject, liste
             const sendError = async (error, options = {}) => sendMessageError(message)(error, options);
             const unsubscribe = (maxMessages) => subscription.unsubscribe(maxMessages);
             if (isDefined(valueOrError.error)) {
-                throw valueOrError.error;
+                log("Error: connectListenerToSubscription: valueOrError.error", valueOrError.error);
+                continue;
             }
             const result = await listener({
                 detail: valueOrError.value,
@@ -77,7 +82,7 @@ export const connectListenerToSubscription = async ({ connection, subject, liste
                 extra: [message.subject],
             });
             log(errorDetail);
-            return sendMessageError(message)(error);
+            sendMessageError(message)(error);
         }
     }
 };

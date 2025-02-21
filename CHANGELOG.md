@@ -2,6 +2,7 @@
 
 
 ## 2025-02-21
+- don't return on error inside of message subscription for...await, an error is not the end here ([606882a](https://github.com/mjt-engine/message/commit/606882a8b0161b9f8ff3c3275dc1a4c940c1216b)) by Matt Taylor
 - added abort signal to listener connector ([6a83fac](https://github.com/mjt-engine/message/commit/6a83fac773e61773ae7307c36be302828eaeecaa)) by Matt Taylor
 - codequake change! Error handling reworked to encapsulate ErrorDetail inside of message as ValueOrError type. Added unsubscribe param function to listeners ([253f77f](https://github.com/mjt-engine/message/commit/253f77f2509350facf2537ae64eb263f97f82e2c)) by Matt Taylor
 
