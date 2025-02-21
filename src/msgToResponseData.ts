@@ -1,24 +1,43 @@
 import { Bytes } from "@mjt-engine/byte";
 import type { Msg } from "nats.ws";
 import { errorToErrorDetail } from "./error/errorToErrorDetail";
+import type { ValueOrError } from "./ValueOrError";
+import { isDefined } from "@mjt-engine/object";
 
 export const msgToResponseData = async ({
   msg,
   subject,
   request,
+  log,
 }: {
   msg: Msg;
   subject: unknown;
   request: unknown;
+  log: (message: unknown, ...extra: unknown[]) => void;
 }) => {
-  const responseData = Bytes.msgPackToObject(new Uint8Array(msg.data));
+  const responseData = Bytes.msgPackToObject<ValueOrError>(
+    new Uint8Array(msg.data)
+  );
   if (msg.headers?.hasError) {
-    throw new Error(`Error response on subject: ${subject as string}`, {
+    log("Error: msgToResponseData: msg.headers.hasError", {
+      headers: msg.headers,
+      responseData,
+    });
+    throw new Error(`Message Error on subject: ${subject as string}`, {
       cause: await errorToErrorDetail({
         error: responseData,
         extra: [request],
       }),
     });
   }
-  return responseData;
+  if (isDefined(responseData.error)) {
+    log("Error: msgToResponseData: responseData.error", responseData.error);
+    throw new Error(`Error on subject: ${subject as string}`, {
+      cause: await errorToErrorDetail({
+        error: responseData.error,
+        extra: [request],
+      }),
+    });
+  }
+  return responseData.value;
 };

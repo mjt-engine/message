@@ -8,6 +8,7 @@ import type {
 import { errorToErrorDetail } from "./error/errorToErrorDetail";
 import { natsHeadersToRecord } from "./natsHeadersToRecord";
 import { sendMessageError } from "./sendMessageError";
+import type { ValueOrError } from "./ValueOrError";
 
 export const connectListenerToSubscription = async <
   CM extends ConnectionMap,
@@ -23,16 +24,28 @@ export const connectListenerToSubscription = async <
   subject: string;
   connection: NatsConnection;
   listener: ConnectionListener<CM, S, E>;
-  options?: Partial<{ log: (message: unknown, ...extrap: unknown[]) => void }>;
+  options?: Partial<{
+    queue?: string;
+    maxMessages?: number;
+    timeout?: number;
+
+    log: (message: unknown, ...extra: unknown[]) => void;
+  }>;
   env?: Partial<E>;
 }) => {
-  const { log = () => {} } = options;
+  const { log = () => {}, queue, maxMessages, timeout } = options;
   log("connectListenerToSubscription: subject: ", subject);
-  const subscription = connection.subscribe(subject);
+  const subscription = connection.subscribe(subject, {
+    queue,
+    max: maxMessages,
+    timeout,
+  });
 
   for await (const message of subscription) {
     try {
-      const detail = Bytes.msgPackToObject<CM[S]["request"]>(message.data);
+      const valueOrError = Bytes.msgPackToObject<
+        ValueOrError<CM[S]["request"]>
+      >(message.data);
       const requestHeaders = natsHeadersToRecord(
         message.headers
       ) as CM[S]["headers"];
@@ -69,7 +82,9 @@ export const connectListenerToSubscription = async <
           connection.publish(message.reply!);
           return;
         }
-        const responseMsg = Bytes.toMsgPack(response);
+        const responseMsg = Bytes.toMsgPack({
+          value: response,
+        } as ValueOrError);
         message.respond(responseMsg, {
           headers: responseHeaders,
         });
@@ -77,22 +92,28 @@ export const connectListenerToSubscription = async <
 
       const sendError = async (
         error: unknown,
-
         options: Partial<{
           code: number;
-
           codeDescription: string;
           headers: Record<string, string>;
         }> = {}
       ) => sendMessageError(message)(error, options);
 
+      const unsubscribe = (maxMessages?: number) =>
+        subscription.unsubscribe(maxMessages);
+
+      if (isDefined(valueOrError.error)) {
+        throw valueOrError.error;
+      }
+
       const result = await listener({
-        detail,
+        detail: valueOrError.value,
         headers: requestHeaders,
         env,
         signal: abortController.signal,
         send,
         sendError,
+        unsubscribe,
       });
       const reply = message.reply;
       if (isUndefined(reply)) {

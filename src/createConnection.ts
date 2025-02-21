@@ -16,6 +16,7 @@ import type {
 import { connectListenerToSubscription } from "./connectListenerToSubscription";
 import { msgToResponseData } from "./msgToResponseData";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
+import type { ValueOrError } from "./ValueOrError";
 
 export type MessageConnection = NatsConnection;
 export type MessageConnectionStats = Stats;
@@ -93,7 +94,7 @@ export const createConnection = async <
         onResponse,
         signal,
       } = props;
-      const requestMsg = Bytes.toMsgPack(request);
+      const requestMsg = Bytes.toMsgPack({ value: request } as ValueOrError);
       const { timeoutMs = 60 * 1000 } = options;
 
       const hs = recordToNatsHeaders(headers);
@@ -129,6 +130,7 @@ export const createConnection = async <
           msg: resp,
           subject,
           request,
+          log,
         });
         await onResponse(responseData);
       }
@@ -141,7 +143,7 @@ export const createConnection = async <
       options?: Partial<{ timeoutMs: number }>;
     }): Promise<CM[S]["response"]> => {
       const { request, subject, headers, options = {} } = props;
-      const requestMsg = Bytes.toMsgPack(request);
+      const requestMsg = Bytes.toMsgPack({ value: request } as ValueOrError);
       const { timeoutMs = 60 * 1000 } = options;
 
       const hs = recordToNatsHeaders(headers);
@@ -153,7 +155,7 @@ export const createConnection = async <
       if (isUndefined(resp.data) || resp.data.byteLength === 0) {
         return undefined;
       }
-      return msgToResponseData({ msg: resp, subject, request });
+      return msgToResponseData({ msg: resp, subject, request, log });
     },
   };
 };

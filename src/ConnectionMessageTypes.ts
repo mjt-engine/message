@@ -34,6 +34,7 @@ export type ConnectionListener<
       headers: Record<string, string>;
     }>
   ) => void;
+  unsubscribe: (maxMessages?: number) => void;
 }) =>
   | CM[S]["response"]
   | Promise<CM[S]["response"] | void>
