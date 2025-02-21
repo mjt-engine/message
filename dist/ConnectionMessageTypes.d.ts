@@ -19,6 +19,7 @@ export type ConnectionListener<CM extends ConnectionMap, S extends keyof CM, E e
         codeDescription: string;
         headers: Record<string, string>;
     }>) => void;
+    unsubscribe: (maxMessages?: number) => void;
 }) => CM[S]["response"] | Promise<CM[S]["response"] | void> | void | Promise<void>;
 export type ConnectionRequester<Req = unknown, Resp = unknown> = (props: {
     subject: string;

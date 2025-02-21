@@ -7,13 +7,13 @@ export const sendMessageError = (message) => async (error, options = {}) => {
         error,
         extra: [message.subject],
     });
-    const responseHeaders = natsHeaders(options.code ?? 500, options.codeDescription ?? "Error");
+    const responseHeaders = natsHeaders();
     if (isDefined(options.headers)) {
         for (const [key, value] of Object.entries(options.headers)) {
             responseHeaders.set(key, value);
         }
     }
-    message.respond(Bytes.toMsgPack(errorDetail), {
+    message.respond(Bytes.toMsgPack({ error: errorDetail }), {
         headers: responseHeaders,
     });
 };

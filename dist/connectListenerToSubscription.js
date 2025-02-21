@@ -4,13 +4,22 @@ import { headers as natsHeaders } from "nats.ws";
 import { errorToErrorDetail } from "./error/errorToErrorDetail";
 import { natsHeadersToRecord } from "./natsHeadersToRecord";
 import { sendMessageError } from "./sendMessageError";
-export const connectListenerToSubscription = async ({ connection, subject, listener, options = {}, env = {}, }) => {
-    const { log = () => { } } = options;
+export const connectListenerToSubscription = async ({ connection, subject, listener, options = {}, env = {}, signal, }) => {
+    const { log = () => { }, queue, maxMessages, timeout } = options;
     log("connectListenerToSubscription: subject: ", subject);
-    const subscription = connection.subscribe(subject);
+    const subscription = connection.subscribe(subject, {
+        queue,
+        max: maxMessages,
+        timeout,
+    });
+    if (isDefined(signal)) {
+        signal.addEventListener("abort", () => {
+            subscription.unsubscribe();
+        });
+    }
     for await (const message of subscription) {
         try {
-            const detail = Bytes.msgPackToObject(message.data);
+            const valueOrError = Bytes.msgPackToObject(message.data);
             const requestHeaders = natsHeadersToRecord(message.headers);
             const abortController = new AbortController();
             if (isDefined(requestHeaders?.["abort-subject"])) {
@@ -35,19 +44,26 @@ export const connectListenerToSubscription = async ({ connection, subject, liste
                     connection.publish(message.reply);
                     return;
                 }
-                const responseMsg = Bytes.toMsgPack(response);
+                const responseMsg = Bytes.toMsgPack({
+                    value: response,
+                });
                 message.respond(responseMsg, {
                     headers: responseHeaders,
                 });
             };
             const sendError = async (error, options = {}) => sendMessageError(message)(error, options);
+            const unsubscribe = (maxMessages) => subscription.unsubscribe(maxMessages);
+            if (isDefined(valueOrError.error)) {
+                throw valueOrError.error;
+            }
             const result = await listener({
-                detail,
+                detail: valueOrError.value,
                 headers: requestHeaders,
                 env,
                 signal: abortController.signal,
                 send,
                 sendError,
+                unsubscribe,
             });
             const reply = message.reply;
             if (isUndefined(reply)) {

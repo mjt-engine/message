@@ -42,7 +42,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
         },
         requestMany: async (props) => {
             const { request, subject, headers, options = {}, onResponse, signal, } = props;
-            const requestMsg = Bytes.toMsgPack(request);
+            const requestMsg = Bytes.toMsgPack({ value: request });
             const { timeoutMs = 60 * 1000 } = options;
             const hs = recordToNatsHeaders(headers);
             if (isDefined(signal)) {
@@ -69,13 +69,14 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                     msg: resp,
                     subject,
                     request,
+                    log,
                 });
                 await onResponse(responseData);
             }
         },
         request: async (props) => {
             const { request, subject, headers, options = {} } = props;
-            const requestMsg = Bytes.toMsgPack(request);
+            const requestMsg = Bytes.toMsgPack({ value: request });
             const { timeoutMs = 60 * 1000 } = options;
             const hs = recordToNatsHeaders(headers);
             const resp = await connection.request(subject, requestMsg, {
@@ -85,7 +86,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
             if (isUndefined(resp.data) || resp.data.byteLength === 0) {
                 return undefined;
             }
-            return msgToResponseData({ msg: resp, subject, request });
+            return msgToResponseData({ msg: resp, subject, request, log });
         },
     };
 };

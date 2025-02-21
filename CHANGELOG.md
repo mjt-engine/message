@@ -1,6 +1,10 @@
 # Changelog
 
 
+## 2025-02-21
+- added abort signal to listener connector ([6a83fac](https://github.com/mjt-engine/message/commit/6a83fac773e61773ae7307c36be302828eaeecaa)) by Matt Taylor
+- codequake change! Error handling reworked to encapsulate ErrorDetail inside of message as ValueOrError type. Added unsubscribe param function to listeners ([253f77f](https://github.com/mjt-engine/message/commit/253f77f2509350facf2537ae64eb263f97f82e2c)) by Matt Taylor
+
 ## 2025-02-18
 - DRY up sending message errors, possible bugfix to default exception handling on listeners ([35db18a](https://github.com/mjt-engine/message/commit/35db18a77fbdc03b8f78d5af7333495230329bab)) by Matt Taylor
 

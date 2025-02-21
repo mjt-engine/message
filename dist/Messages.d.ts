@@ -35,13 +35,17 @@ export declare const Messages: {
             }>;
         }) => Promise<CM[S]["response"]>;
     }>;
-    connectListenerToSubscription: <CM extends import("./ConnectionMessageTypes").ConnectionMap, S extends keyof CM, E extends Record<string, string>>({ connection, subject, listener, options, env, }: {
+    connectListenerToSubscription: <CM extends import("./ConnectionMessageTypes").ConnectionMap, S extends keyof CM, E extends Record<string, string>>({ connection, subject, listener, options, env, signal, }: {
         subject: string;
         connection: import("nats.ws").NatsConnection;
         listener: import("./ConnectionMessageTypes").ConnectionListener<CM, S, E>;
         options?: Partial<{
-            log: (message: unknown, ...extrap: unknown[]) => void;
+            queue?: string;
+            maxMessages?: number;
+            timeout?: number;
+            log: (message: unknown, ...extra: unknown[]) => void;
         }>;
         env?: Partial<E>;
+        signal?: AbortSignal;
     }) => Promise<void>;
 };
