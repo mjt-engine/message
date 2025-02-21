@@ -20,6 +20,7 @@ export const connectListenerToSubscription = async <
   listener,
   options = {},
   env = {},
+  signal,
 }: {
   subject: string;
   connection: NatsConnection;
@@ -28,10 +29,10 @@ export const connectListenerToSubscription = async <
     queue?: string;
     maxMessages?: number;
     timeout?: number;
-
     log: (message: unknown, ...extra: unknown[]) => void;
   }>;
   env?: Partial<E>;
+  signal?: AbortSignal;
 }) => {
   const { log = () => {}, queue, maxMessages, timeout } = options;
   log("connectListenerToSubscription: subject: ", subject);
@@ -40,6 +41,12 @@ export const connectListenerToSubscription = async <
     max: maxMessages,
     timeout,
   });
+
+  if (isDefined(signal)) {
+    signal.addEventListener("abort", () => {
+      subscription.unsubscribe();
+    });
+  }
 
   for await (const message of subscription) {
     try {
