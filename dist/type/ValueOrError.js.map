@@ -1,0 +1,1 @@
+{"version":3,"file":"ValueOrError.js","sourceRoot":"","sources":["../../src/type/ValueOrError.ts"],"names":[],"mappings":"","sourcesContent":["import type { ErrorDetail } from \"../error/ErrorDetail\";\n\nexport type ValueOrError<T = unknown> = { value: T; error: ErrorDetail };\n"]}

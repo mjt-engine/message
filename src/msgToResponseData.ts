@@ -1,7 +1,7 @@
 import { Bytes } from "@mjt-engine/byte";
 import type { Msg } from "nats.ws";
 import { errorToErrorDetail } from "./error/errorToErrorDetail";
-import type { ValueOrError } from "./ValueOrError";
+import type { ValueOrError } from "./type/ValueOrError";
 import { isDefined } from "@mjt-engine/object";
 
 export const msgToResponseData = async ({

@@ -1,0 +1,1 @@
+{"version":3,"file":"ConnectionMap.js","sourceRoot":"","sources":["../../src/type/ConnectionMap.ts"],"names":[],"mappings":"","sourcesContent":["export type ConnectionMap<\n  Req = unknown,\n  Resp = unknown,\n  Header extends string = string\n> = Record<\n  string, { request: Req; response: Resp; headers?: Record<Header, string>; }\n>;\n"]}

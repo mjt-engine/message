@@ -1,13 +1,5 @@
-export type ConnectionMap<
-  Req = unknown,
-  Resp = unknown,
-  Header extends string = string
-> = Record<
-  string,
-  { request: Req; response: Resp; headers?: Record<Header, string> }
->;
+import type { ConnectionMap } from "./ConnectionMap";
 
-export type ConnectionSpecialHeader = "abort-subject";
 
 export type ConnectionListener<
   CM extends ConnectionMap,
@@ -35,14 +27,7 @@ export type ConnectionListener<
     }>
   ) => void;
   unsubscribe: (maxMessages?: number) => void;
-}) =>
-  | CM[S]["response"]
-  | Promise<CM[S]["response"] | void>
-  | void
-  | Promise<void>;
-
-export type ConnectionRequester<Req = unknown, Resp = unknown> = (props: {
-  subject: string;
-  request: Req;
-  options?: Partial<{ headers: Record<string, string> }>;
-}) => Promise<Resp>;
+}) => CM[S]["response"] |
+    Promise<CM[S]["response"] | void> |
+    void |
+    Promise<void>;

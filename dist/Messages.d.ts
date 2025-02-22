@@ -1,7 +1,7 @@
 export declare const Messages: {
-    createConnection: <CM extends import("./ConnectionMessageTypes").ConnectionMap, E extends Record<string, string> = Record<string, string>>({ server, creds, token, subscribers, options, env, }: {
+    createConnection: <CM extends import(".").ConnectionMap, E extends Record<string, string> = Record<string, string>>({ server, creds, token, subscribers, options, env, }: {
         server: string[] | string;
-        subscribers?: Partial<{ [k in keyof CM]: import("./ConnectionMessageTypes").ConnectionListener<CM, k, E>; }>;
+        subscribers?: Partial<{ [k in keyof CM]: import(".").ConnectionListener<CM, k, E>; }>;
         creds?: string;
         token?: string;
         options?: Partial<{
@@ -34,11 +34,16 @@ export declare const Messages: {
                 timeoutMs: number;
             }>;
         }) => Promise<CM[S]["response"]>;
+        publish: <S extends import(".").PartialSubject, EM extends import(".").EventMap<S>>(props: {
+            subject: S;
+            payload: EM[S];
+            headers?: Record<keyof CM[S]["headers"], string>;
+        }) => Promise<void>;
     }>;
-    connectListenerToSubscription: <CM extends import("./ConnectionMessageTypes").ConnectionMap, S extends keyof CM, E extends Record<string, string>>({ connection, subject, listener, options, env, signal, }: {
+    connectEventListenerToSubject: <S extends import(".").PartialSubject, EM extends import(".").EventMap<S>, E extends Record<string, string>>({ connection, subject, listener, options, env, signal, onError, }: {
         subject: string;
         connection: import("nats.ws").NatsConnection;
-        listener: import("./ConnectionMessageTypes").ConnectionListener<CM, S, E>;
+        listener: import(".").EventListener<S, EM, E>;
         options?: Partial<{
             queue?: string;
             maxMessages?: number;
@@ -47,5 +52,6 @@ export declare const Messages: {
         }>;
         env?: Partial<E>;
         signal?: AbortSignal;
+        onError?: (error: unknown) => void;
     }) => Promise<void>;
 };

@@ -8,15 +8,15 @@ import {
   type Stats,
   type Status,
 } from "nats.ws";
-import type {
-  ConnectionListener,
-  ConnectionMap,
-  ConnectionSpecialHeader,
-} from "./ConnectionMessageTypes";
-import { connectListenerToSubscription } from "./connectListenerToSubscription";
+import type { ConnectionMap } from "./type/ConnectionMap";
+import type { ConnectionSpecialHeader } from "./type/ConnectionSpecialHeader";
+import type { ConnectionListener } from "./type/ConnectionListener";
+import { connectConnectionListenerToSubject } from "./connectConnectionListenerToSubject";
 import { msgToResponseData } from "./msgToResponseData";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
-import type { ValueOrError } from "./ValueOrError";
+import type { ValueOrError } from "./type/ValueOrError";
+import type { PartialSubject } from "./type/PartialSubject";
+import type { EventMap } from "./type/EventMap";
 
 export type MessageConnection = NatsConnection;
 export type MessageConnectionStats = Stats;
@@ -57,7 +57,7 @@ export const createConnection = async <
     if (isUndefined(listener)) {
       continue;
     }
-    connectListenerToSubscription({
+    connectConnectionListenerToSubject({
       connection,
       subject,
       listener,
@@ -156,6 +156,20 @@ export const createConnection = async <
         return undefined;
       }
       return msgToResponseData({ msg: resp, subject, request, log });
+    },
+    publish: async <S extends PartialSubject, EM extends EventMap<S>>(props: {
+      subject: S;
+      payload: EM[S];
+      headers?: Record<keyof CM[S]["headers"], string>;
+    }): Promise<void> => {
+      const { payload, subject, headers } = props;
+      const msg = Bytes.toMsgPack({ value: payload } as ValueOrError);
+
+      const hs = recordToNatsHeaders(headers);
+
+      return connection.publish(subject as string, msg, {
+        headers: hs,
+      });
     },
   };
 };

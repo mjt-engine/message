@@ -1,18 +1,16 @@
 import { Bytes } from "@mjt-engine/byte";
 import { isDefined, isUndefined } from "@mjt-engine/object";
 import { type NatsConnection, headers as natsHeaders } from "nats.ws";
-import type {
-  ConnectionListener,
-  ConnectionMap,
-} from "./ConnectionMessageTypes";
+import type { ConnectionMap } from "./type/ConnectionMap";
+import type { ConnectionListener } from "./type/ConnectionListener";
 import { errorToErrorDetail } from "./error/errorToErrorDetail";
 import { natsHeadersToRecord } from "./natsHeadersToRecord";
 import { sendMessageError } from "./sendMessageError";
-import type { ValueOrError } from "./ValueOrError";
+import type { ValueOrError } from "./type/ValueOrError";
 
-export const connectListenerToSubscription = async <
-  CM extends ConnectionMap,
+export const connectConnectionListenerToSubject = async <
   S extends keyof CM,
+  CM extends ConnectionMap,
   E extends Record<string, string>
 >({
   connection,
@@ -35,7 +33,7 @@ export const connectListenerToSubscription = async <
   signal?: AbortSignal;
 }) => {
   const { log = () => {}, queue, maxMessages, timeout } = options;
-  log("connectListenerToSubscription: subject: ", subject);
+  log("connectConnectionListenerToSubject: subject: ", subject);
   const subscription = connection.subscribe(subject, {
     queue,
     max: maxMessages,

@@ -1,0 +1,1 @@
+{"version":3,"file":"PartialSubject.js","sourceRoot":"","sources":["../../src/type/PartialSubject.ts"],"names":[],"mappings":"","sourcesContent":["export type PartialSubject<T extends string = string> = `${T}.${string}`;\n"]}

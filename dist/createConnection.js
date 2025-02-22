@@ -1,7 +1,7 @@
 import { Bytes } from "@mjt-engine/byte";
 import { isDefined, isUndefined, toMany } from "@mjt-engine/object";
 import { RequestStrategy, connect, credsAuthenticator, } from "nats.ws";
-import { connectListenerToSubscription } from "./connectListenerToSubscription";
+import { connectConnectionListenerToSubject } from "./connectConnectionListenerToSubject";
 import { msgToResponseData } from "./msgToResponseData";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
 export const createConnection = async ({ server, creds, token, subscribers = {}, options = {}, env = {}, }) => {
@@ -20,7 +20,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
         if (isUndefined(listener)) {
             continue;
         }
-        connectListenerToSubscription({
+        connectConnectionListenerToSubject({
             connection,
             subject,
             listener,
@@ -87,6 +87,14 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                 return undefined;
             }
             return msgToResponseData({ msg: resp, subject, request, log });
+        },
+        publish: async (props) => {
+            const { payload, subject, headers } = props;
+            const msg = Bytes.toMsgPack({ value: payload });
+            const hs = recordToNatsHeaders(headers);
+            return connection.publish(subject, msg, {
+                headers: hs,
+            });
         },
     };
 };
