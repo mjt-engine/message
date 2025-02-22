@@ -1,6 +1,9 @@
 # Changelog
 
 
+## 2025-02-22
+- added event types and function to connect event-listeners ([57bb149](https://github.com/mjt-engine/message/commit/57bb1494ab7c23eedad6fe44f7a4666fe56b0590)) by Matt Taylor
+
 ## 2025-02-21
 - don't return on error inside of message subscription for...await, an error is not the end here ([606882a](https://github.com/mjt-engine/message/commit/606882a8b0161b9f8ff3c3275dc1a4c940c1216b)) by Matt Taylor
 - added abort signal to listener connector ([6a83fac](https://github.com/mjt-engine/message/commit/6a83fac773e61773ae7307c36be302828eaeecaa)) by Matt Taylor
