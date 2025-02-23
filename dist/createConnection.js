@@ -29,17 +29,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
         });
     }
     return {
-        connection: {
-            close: () => connection.close(),
-            drain: () => connection.drain(),
-            flush: () => connection.flush(),
-            stats: () => {
-                console.log(connection.stats());
-            },
-            status: () => {
-                console.log(connection.status());
-            },
-        },
+        connection,
         requestMany: async (props) => {
             const { request, subject, headers, options = {}, onResponse, signal, } = props;
             const requestMsg = Bytes.toMsgPack({ value: request });

@@ -8,38 +8,7 @@ export declare const Messages: {
             log: (message: unknown, ...extra: unknown[]) => void;
         }>;
         env?: Partial<E>;
-    }) => Promise<{
-        connection: {
-            close: () => Promise<void>;
-            drain: () => Promise<void>;
-            flush: () => Promise<void>;
-            stats: () => void;
-            status: () => void;
-        };
-        requestMany: <S extends keyof CM>(props: {
-            subject: S;
-            request: CM[S]["request"];
-            headers?: Record<keyof CM[S]["headers"], string>;
-            options?: Partial<{
-                timeoutMs: number;
-            }>;
-            onResponse: (response: CM[S]["response"]) => void | Promise<void>;
-            signal?: AbortSignal;
-        }) => Promise<void>;
-        request: <S extends keyof CM>(props: {
-            subject: S;
-            request: CM[S]["request"];
-            headers?: Record<keyof CM[S]["headers"], string>;
-            options?: Partial<{
-                timeoutMs: number;
-            }>;
-        }) => Promise<CM[S]["response"]>;
-        publish: <S extends import(".").PartialSubject, EM extends import(".").EventMap<S>>(props: {
-            subject: S;
-            payload: EM[S];
-            headers?: Record<keyof CM[S]["headers"], string>;
-        }) => Promise<void>;
-    }>;
+    }) => Promise<import("./createConnection").MessageConnectionInstance<CM>>;
     connectEventListenerToSubject: <S extends import(".").PartialSubject, EM extends import(".").EventMap<S>, E extends Record<string, string> = Record<string, string>>({ connection, subject, listener, options, env, signal, onError, }: {
         subject: string;
         connection: import("nats.ws").NatsConnection;

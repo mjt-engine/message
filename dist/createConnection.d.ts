@@ -6,23 +6,8 @@ import type { EventMap } from "./type/EventMap";
 export type MessageConnection = NatsConnection;
 export type MessageConnectionStats = Stats;
 export type MessageConnectionStatus = Status;
-export declare const createConnection: <CM extends ConnectionMap, E extends Record<string, string> = Record<string, string>>({ server, creds, token, subscribers, options, env, }: {
-    server: string[] | string;
-    subscribers?: Partial<{ [k in keyof CM]: ConnectionListener<CM, k, E>; }>;
-    creds?: string;
-    token?: string;
-    options?: Partial<{
-        log: (message: unknown, ...extra: unknown[]) => void;
-    }>;
-    env?: Partial<E>;
-}) => Promise<{
-    connection: {
-        close: () => Promise<void>;
-        drain: () => Promise<void>;
-        flush: () => Promise<void>;
-        stats: () => void;
-        status: () => void;
-    };
+export type MessageConnectionInstance<CM extends ConnectionMap> = {
+    connection: MessageConnection;
     requestMany: <S extends keyof CM>(props: {
         subject: S;
         request: CM[S]["request"];
@@ -46,4 +31,14 @@ export declare const createConnection: <CM extends ConnectionMap, E extends Reco
         payload: EM[S];
         headers?: Record<keyof CM[S]["headers"], string>;
     }) => Promise<void>;
-}>;
+};
+export declare const createConnection: <CM extends ConnectionMap, E extends Record<string, string> = Record<string, string>>({ server, creds, token, subscribers, options, env, }: {
+    server: string[] | string;
+    subscribers?: Partial<{ [k in keyof CM]: ConnectionListener<CM, k, E>; }>;
+    creds?: string;
+    token?: string;
+    options?: Partial<{
+        log: (message: unknown, ...extra: unknown[]) => void;
+    }>;
+    env?: Partial<E>;
+}) => Promise<MessageConnectionInstance<CM>>;
