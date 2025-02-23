@@ -11,7 +11,7 @@ import {
 import type { ConnectionMap } from "./type/ConnectionMap";
 import type { ConnectionSpecialHeader } from "./type/ConnectionSpecialHeader";
 import type { ConnectionListener } from "./type/ConnectionListener";
-import { connectConnectionListenerToSubjectRoot } from "./connectConnectionListenerToSubjectRoot";
+import { connectConnectionListenerToSubjectRoot } from "./connectConnectionListenerToSubject";
 import { msgToResponseData } from "./msgToResponseData";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
 import type { ValueOrError } from "./type/ValueOrError";

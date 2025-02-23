@@ -8,7 +8,7 @@ import { natsHeadersToRecord } from "./natsHeadersToRecord";
 import { sendMessageError } from "./sendMessageError";
 import type { ValueOrError } from "./type/ValueOrError";
 
-export const connectConnectionListenerToSubjectRoot = async <
+export const connectConnectionListenerToSubject = async <
   S extends keyof CM,
   CM extends ConnectionMap,
   E extends Record<string, string>
