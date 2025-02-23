@@ -4,7 +4,7 @@ import { headers as natsHeaders } from "nats.ws";
 import { errorToErrorDetail } from "./error/errorToErrorDetail";
 import { natsHeadersToRecord } from "./natsHeadersToRecord";
 import { sendMessageError } from "./sendMessageError";
-export const connectConnectionListenerToSubject = async ({ connection, subject, listener, options = {}, env = {}, signal, }) => {
+export const connectConnectionListenerToSubjectRoot = async ({ connection, subject, listener, options = {}, env = {}, signal, }) => {
     const { log = () => { }, queue, maxMessages, timeout } = options;
     log("connectConnectionListenerToSubject: subject: ", subject);
     const subscription = connection.subscribe(subject, {

@@ -2,6 +2,7 @@
 
 
 ## 2025-02-23
+- changed connect connection listener function name to reflect subjectRoot as the connection point ([078de12](https://github.com/mjt-engine/message/commit/078de1207b3dc4883cfc067ccad4a47c71080bce)) by Matt Taylor
 - subect -> subjectRoot on event listener and use correct pattern matching ([9753624](https://github.com/mjt-engine/message/commit/975362447aadd0510d958b529edd0d1c856cd7e2)) by Matt Taylor
 - concrete type for MessageConnectionInstance ([0f7824e](https://github.com/mjt-engine/message/commit/0f7824edd5df6440ae947b528e3ce5f91bf8ec92)) by Matt Taylor
 - default env on connectEventListnerToSubject ([4caf276](https://github.com/mjt-engine/message/commit/4caf2767fa685f8eb7d0998a96da3e1b952caba3)) by Matt Taylor
