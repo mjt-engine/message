@@ -9,7 +9,7 @@ import type { ValueOrError } from "./type/ValueOrError";
 export const connectEventListenerToSubject = async <
   S extends PartialSubject,
   EM extends EventMap<S>,
-  E extends Record<string, string>
+  E extends Record<string, string> = Record<string, string>
 >({
   connection,
   subject,
