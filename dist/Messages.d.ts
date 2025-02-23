@@ -23,4 +23,5 @@ export declare const Messages: {
         signal?: AbortSignal;
         onError?: (error: unknown) => void;
     }) => Promise<void>;
+    parseSubject: <T extends string = string>(subject: import(".").PartialSubject<T>) => import("./type/ParsedSubject").ParsedSubject<T>;
 };

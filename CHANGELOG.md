@@ -2,6 +2,8 @@
 
 
 ## 2025-02-23
+- export parseSubject under Messages ([ad35cb2](https://github.com/mjt-engine/message/commit/ad35cb2526309d278dac8832e456c7f7030ad828)) by Matt Taylor
+- export ParsedSubject ([f9ad397](https://github.com/mjt-engine/message/commit/f9ad39744b564f1643373f66197667762ab84b9d)) by Matt Taylor
 - add subject to EventListener params ([35e865a](https://github.com/mjt-engine/message/commit/35e865a7dad46facf8a2d0202b6fe3b6620fcb48)) by Matt Taylor
 - oops, changed wrong funciton name, connectEventListenerToSubjectRoot is the correct name ([5d80a8e](https://github.com/mjt-engine/message/commit/5d80a8e92e0ac46c0f6a83af582074e1c127dc17)) by Matt Taylor
 - oops, changed wrong funciton name, connectEventListenerToSubjectRoot is the correct name ([b46b7f4](https://github.com/mjt-engine/message/commit/b46b7f4fc256e1aa4af0ab7c82d6cde9ae8c0cc0)) by Matt Taylor
