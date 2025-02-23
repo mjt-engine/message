@@ -2,6 +2,7 @@
 
 
 ## 2025-02-23
+- add subject to EventListener params ([35e865a](https://github.com/mjt-engine/message/commit/35e865a7dad46facf8a2d0202b6fe3b6620fcb48)) by Matt Taylor
 - oops, changed wrong funciton name, connectEventListenerToSubjectRoot is the correct name ([5d80a8e](https://github.com/mjt-engine/message/commit/5d80a8e92e0ac46c0f6a83af582074e1c127dc17)) by Matt Taylor
 - oops, changed wrong funciton name, connectEventListenerToSubjectRoot is the correct name ([b46b7f4](https://github.com/mjt-engine/message/commit/b46b7f4fc256e1aa4af0ab7c82d6cde9ae8c0cc0)) by Matt Taylor
 - changed connect connection listener function name to reflect subjectRoot as the connection point ([078de12](https://github.com/mjt-engine/message/commit/078de1207b3dc4883cfc067ccad4a47c71080bce)) by Matt Taylor

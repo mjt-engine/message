@@ -32,6 +32,7 @@ export const connectEventListenerToSubjectRoot = async ({ connection, subjectRoo
                 env,
                 signal,
                 unsubscribe,
+                subject: message.subject,
             });
         }
         catch (error) {
