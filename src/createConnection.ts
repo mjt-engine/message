@@ -11,7 +11,7 @@ import {
 import type { ConnectionMap } from "./type/ConnectionMap";
 import type { ConnectionSpecialHeader } from "./type/ConnectionSpecialHeader";
 import type { ConnectionListener } from "./type/ConnectionListener";
-import { connectConnectionListenerToSubject } from "./connectConnectionListenerToSubjectRoot";
+import { connectConnectionListenerToSubjectRoot } from "./connectConnectionListenerToSubjectRoot";
 import { msgToResponseData } from "./msgToResponseData";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
 import type { ValueOrError } from "./type/ValueOrError";
@@ -80,7 +80,7 @@ export const createConnection = async <
     if (isUndefined(listener)) {
       continue;
     }
-    connectConnectionListenerToSubject({
+    connectConnectionListenerToSubjectRoot({
       connection,
       subject,
       listener,
