@@ -8,6 +8,7 @@ export type EventListener<
 > = (props: {
   env: Readonly<Partial<E>>;
   detail: EM[S];
+  subject: S;
   signal?: AbortSignal;
   unsubscribe: (maxMessages?: number) => void;
   onError?: (error: unknown) => void;

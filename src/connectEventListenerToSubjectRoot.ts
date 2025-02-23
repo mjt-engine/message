@@ -58,7 +58,6 @@ export const connectEventListenerToSubjectRoot = async <
       const valueOrError = Bytes.msgPackToObject<ValueOrError<EM[S]>>(
         message.data
       );
-
       const unsubscribe = (maxMessages?: number) =>
         subscription.unsubscribe(maxMessages);
 
@@ -72,6 +71,7 @@ export const connectEventListenerToSubjectRoot = async <
         env,
         signal,
         unsubscribe,
+        subject: message.subject as S,
       });
     } catch (error) {
       onError(error);
