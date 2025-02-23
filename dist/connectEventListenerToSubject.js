@@ -1,11 +1,11 @@
 import { Bytes } from "@mjt-engine/byte";
 import { isDefined } from "@mjt-engine/object";
-export const connectEventListenerToSubject = async ({ connection, subject, listener, options = {}, env = {}, signal, onError = (e) => {
+export const connectEventListenerToSubjectRoot = async ({ connection, subjectRoot, listener, options = {}, env = {}, signal, onError = (e) => {
     options?.log?.(e);
 }, }) => {
     const { log = () => { }, queue, maxMessages, timeout } = options;
-    log("connectEventListenerToSubject: subject: ", subject);
-    const subscription = connection.subscribe(subject, {
+    log("connectEventListenerToSubject: subjectRoot: ", subjectRoot);
+    const subscription = connection.subscribe(`${subjectRoot}.>`, {
         queue,
         max: maxMessages,
         timeout,

@@ -1,7 +1,7 @@
-import { connectEventListenerToSubject } from "./connectEventListenerToSubject";
+import { connectEventListenerToSubjectRoot } from "./connectEventListenerToSubject";
 import { createConnection } from "./createConnection";
 export const Messages = {
     createConnection,
-    connectEventListenerToSubject,
+    connectEventListenerToSubject: connectEventListenerToSubjectRoot,
 };
 //# sourceMappingURL=Messages.js.map
