@@ -40,7 +40,7 @@ export declare const Messages: {
             headers?: Record<keyof CM[S]["headers"], string>;
         }) => Promise<void>;
     }>;
-    connectEventListenerToSubject: <S extends import(".").PartialSubject, EM extends import(".").EventMap<S>, E extends Record<string, string>>({ connection, subject, listener, options, env, signal, onError, }: {
+    connectEventListenerToSubject: <S extends import(".").PartialSubject, EM extends import(".").EventMap<S>, E extends Record<string, string> = Record<string, string>>({ connection, subject, listener, options, env, signal, onError, }: {
         subject: string;
         connection: import("nats.ws").NatsConnection;
         listener: import(".").EventListener<S, EM, E>;
