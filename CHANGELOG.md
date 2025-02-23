@@ -1,6 +1,9 @@
 # Changelog
 
 
+## 2025-02-23
+- addition of ParsedSubject and rework of PartialSubject to include root only as valid ([275f600](https://github.com/mjt-engine/message/commit/275f60025232468d9ac9dc61802dc90e399105b6)) by Matt Taylor
+
 ## 2025-02-22
 - added event types and function to connect event-listeners ([57bb149](https://github.com/mjt-engine/message/commit/57bb1494ab7c23eedad6fe44f7a4666fe56b0590)) by Matt Taylor
 

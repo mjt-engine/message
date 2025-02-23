@@ -1,1 +1,1 @@
-export type PartialSubject<T extends string = string> = `${T}.${string}`;
+export type PartialSubject<T extends string = string> = `${T}.${string}` | T;
