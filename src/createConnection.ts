@@ -22,6 +22,29 @@ export type MessageConnection = NatsConnection;
 export type MessageConnectionStats = Stats;
 export type MessageConnectionStatus = Status;
 
+export type MessageConnectionInstance<CM extends ConnectionMap> = {
+  connection: MessageConnection;
+  requestMany: <S extends keyof CM>(props: {
+    subject: S;
+    request: CM[S]["request"];
+    headers?: Record<keyof CM[S]["headers"], string>;
+    options?: Partial<{ timeoutMs: number }>;
+    onResponse: (response: CM[S]["response"]) => void | Promise<void>;
+    signal?: AbortSignal;
+  }) => Promise<void>;
+  request: <S extends keyof CM>(props: {
+    subject: S;
+    request: CM[S]["request"];
+    headers?: Record<keyof CM[S]["headers"], string>;
+    options?: Partial<{ timeoutMs: number }>;
+  }) => Promise<CM[S]["response"]>;
+  publish: <S extends PartialSubject, EM extends EventMap<S>>(props: {
+    subject: S;
+    payload: EM[S];
+    headers?: Record<keyof CM[S]["headers"], string>;
+  }) => Promise<void>;
+};
+
 export const createConnection = async <
   CM extends ConnectionMap,
   E extends Record<string, string> = Record<string, string>
@@ -41,7 +64,7 @@ export const createConnection = async <
     log: (message: unknown, ...extra: unknown[]) => void;
   }>;
   env?: Partial<E>;
-}) => {
+}): Promise<MessageConnectionInstance<CM>> => {
   const { log = () => {} } = options;
   log("createConnection: server: ", server);
   const connection: MessageConnection = await connect({
@@ -67,17 +90,7 @@ export const createConnection = async <
   }
 
   return {
-    connection: {
-      close: () => connection.close(),
-      drain: () => connection.drain(),
-      flush: () => connection.flush(),
-      stats: () => {
-        console.log(connection.stats());
-      },
-      status: () => {
-        console.log(connection.status());
-      },
-    },
+    connection,
     requestMany: async <S extends keyof CM>(props: {
       subject: S;
       request: CM[S]["request"];
