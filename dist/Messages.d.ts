@@ -9,7 +9,7 @@ export declare const Messages: {
         }>;
         env?: Partial<E>;
     }) => Promise<import("./createConnection").MessageConnectionInstance<CM>>;
-    connectEventListenerToSubject: <S extends import(".").PartialSubject, EM extends import(".").EventMap<S>, E extends Record<string, string> = Record<string, string>>({ connection, subjectRoot, listener, options, env, signal, onError, }: {
+    connectEventListenerToSubjectRoot: <S extends import(".").PartialSubject, EM extends import(".").EventMap<S>, E extends Record<string, string> = Record<string, string>>({ connection, subjectRoot, listener, options, env, signal, onError, }: {
         subjectRoot: string;
         connection: import("nats.ws").NatsConnection;
         listener: import(".").EventListener<S, EM, E>;
