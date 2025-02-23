@@ -6,13 +6,13 @@ import type { EventMap } from "./type/EventMap";
 import type { PartialSubject } from "./type/PartialSubject";
 import type { ValueOrError } from "./type/ValueOrError";
 
-export const connectEventListenerToSubject = async <
+export const connectEventListenerToSubjectRoot = async <
   S extends PartialSubject,
   EM extends EventMap<S>,
   E extends Record<string, string> = Record<string, string>
 >({
   connection,
-  subject,
+  subjectRoot,
   listener,
   options = {},
   env = {},
@@ -21,7 +21,7 @@ export const connectEventListenerToSubject = async <
     options?.log?.(e);
   },
 }: {
-  subject: string;
+  subjectRoot: string;
   connection: NatsConnection;
   listener: EventListener<S, EM, E>;
   options?: Partial<{
@@ -36,8 +36,8 @@ export const connectEventListenerToSubject = async <
   onError?: (error: unknown) => void;
 }) => {
   const { log = () => {}, queue, maxMessages, timeout } = options;
-  log("connectEventListenerToSubject: subject: ", subject);
-  const subscription = connection.subscribe(subject, {
+  log("connectEventListenerToSubject: subjectRoot: ", subjectRoot);
+  const subscription = connection.subscribe(`${subjectRoot}.>`, {
     queue,
     max: maxMessages,
     timeout,
