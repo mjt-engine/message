@@ -1,7 +1,7 @@
 import { Bytes } from "@mjt-engine/byte";
 import { isDefined, isUndefined, toMany } from "@mjt-engine/object";
 import { RequestStrategy, connect, credsAuthenticator, } from "nats.ws";
-import { connectConnectionListenerToSubjectRoot } from "./connectConnectionListenerToSubject";
+import { connectConnectionListenerToSubject } from "./connectConnectionListenerToSubject";
 import { msgToResponseData } from "./msgToResponseData";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
 export const createConnection = async ({ server, creds, token, subscribers = {}, options = {}, env = {}, }) => {
@@ -20,7 +20,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
         if (isUndefined(listener)) {
             continue;
         }
-        connectConnectionListenerToSubjectRoot({
+        connectConnectionListenerToSubject({
             connection,
             subject,
             listener,

@@ -2,6 +2,8 @@
 
 
 ## 2025-02-23
+- oops, changed wrong funciton name, connectEventListenerToSubjectRoot is the correct name ([5d80a8e](https://github.com/mjt-engine/message/commit/5d80a8e92e0ac46c0f6a83af582074e1c127dc17)) by Matt Taylor
+- oops, changed wrong funciton name, connectEventListenerToSubjectRoot is the correct name ([b46b7f4](https://github.com/mjt-engine/message/commit/b46b7f4fc256e1aa4af0ab7c82d6cde9ae8c0cc0)) by Matt Taylor
 - changed connect connection listener function name to reflect subjectRoot as the connection point ([078de12](https://github.com/mjt-engine/message/commit/078de1207b3dc4883cfc067ccad4a47c71080bce)) by Matt Taylor
 - subect -> subjectRoot on event listener and use correct pattern matching ([9753624](https://github.com/mjt-engine/message/commit/975362447aadd0510d958b529edd0d1c856cd7e2)) by Matt Taylor
 - concrete type for MessageConnectionInstance ([0f7824e](https://github.com/mjt-engine/message/commit/0f7824edd5df6440ae947b528e3ce5f91bf8ec92)) by Matt Taylor
