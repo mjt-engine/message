@@ -20,6 +20,9 @@ export const connectEventListenerToSubjectRoot = async ({ connection, subjectRoo
             subscription.unsubscribe();
         });
     }
+    else {
+        console.warn("signal is undefined! listener is forever");
+    }
     for await (const message of subscription) {
         try {
             const valueOrError = Bytes.msgPackToObject(message.data);
