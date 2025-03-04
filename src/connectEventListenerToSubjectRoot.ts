@@ -52,6 +52,8 @@ export const connectEventListenerToSubjectRoot = async <
       console.log(`aborting subscription: ${subscription.getID()}`);
       subscription.unsubscribe();
     });
+  } else {
+    console.warn("signal is undefined! listener is forever");
   }
 
   for await (const message of subscription) {
