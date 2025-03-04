@@ -1,6 +1,9 @@
 # Changelog
 
 
+## 2025-03-04
+- log for unsub of listener ([fbc5075](https://github.com/mjt-engine/message/commit/fbc5075d161095d975a0bfd32adee5aab69a925c)) by Matt Taylor
+
 ## 2025-02-23
 - export parseSubject under Messages ([ad35cb2](https://github.com/mjt-engine/message/commit/ad35cb2526309d278dac8832e456c7f7030ad828)) by Matt Taylor
 - export ParsedSubject ([f9ad397](https://github.com/mjt-engine/message/commit/f9ad39744b564f1643373f66197667762ab84b9d)) by Matt Taylor
