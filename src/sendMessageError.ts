@@ -1,7 +1,7 @@
 import { Bytes } from "@mjt-engine/byte";
+import { Errors } from "@mjt-engine/error";
 import { isDefined } from "@mjt-engine/object";
 import { type Msg, headers as natsHeaders } from "nats.ws";
-import { errorToErrorDetail } from "./error/errorToErrorDetail";
 
 export const sendMessageError =
   (message: Msg) =>
@@ -13,7 +13,7 @@ export const sendMessageError =
       headers: Record<string, string>;
     }> = {}
   ) => {
-    const errorDetail = await errorToErrorDetail({
+    const errorDetail = Errors.errorToErrorDetail({
       error,
       extra: [message.subject],
     });

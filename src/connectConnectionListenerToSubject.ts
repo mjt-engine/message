@@ -3,10 +3,10 @@ import { isDefined, isUndefined } from "@mjt-engine/object";
 import { type NatsConnection, headers as natsHeaders } from "nats.ws";
 import type { ConnectionMap } from "./type/ConnectionMap";
 import type { ConnectionListener } from "./type/ConnectionListener";
-import { errorToErrorDetail } from "./error/errorToErrorDetail";
 import { natsHeadersToRecord } from "./natsHeadersToRecord";
 import { sendMessageError } from "./sendMessageError";
 import type { ValueOrError } from "./type/ValueOrError";
+import { Errors } from "@mjt-engine/error";
 
 export const connectConnectionListenerToSubject = async <
   S extends keyof CM,
@@ -134,7 +134,7 @@ export const connectConnectionListenerToSubject = async <
       }
       send(result);
     } catch (error) {
-      const errorDetail = await errorToErrorDetail({
+      const errorDetail = Errors.errorToErrorDetail({
         error,
         extra: [message.subject],
       });

@@ -1,8 +1,8 @@
 import { Bytes } from "@mjt-engine/byte";
 import type { Msg } from "nats.ws";
-import { errorToErrorDetail } from "./error/errorToErrorDetail";
 import type { ValueOrError } from "./type/ValueOrError";
 import { isDefined } from "@mjt-engine/object";
+import { Errors } from "@mjt-engine/error";
 
 export const msgToResponseData = async ({
   msg,
@@ -24,7 +24,7 @@ export const msgToResponseData = async ({
       responseData,
     });
     throw new Error(`Message Error on subject: ${subject as string}`, {
-      cause: await errorToErrorDetail({
+      cause: Errors.errorToErrorDetail({
         error: responseData,
         extra: [request],
       }),
@@ -33,7 +33,7 @@ export const msgToResponseData = async ({
   if (isDefined(responseData.error)) {
     log("Error: msgToResponseData: responseData.error", responseData.error);
     throw new Error(`Error on subject: ${subject as string}`, {
-      cause: await errorToErrorDetail({
+      cause: Errors.errorToErrorDetail({
         error: responseData.error,
         extra: [request],
       }),
