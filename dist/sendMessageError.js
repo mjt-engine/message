@@ -1,9 +1,9 @@
 import { Bytes } from "@mjt-engine/byte";
+import { Errors } from "@mjt-engine/error";
 import { isDefined } from "@mjt-engine/object";
 import { headers as natsHeaders } from "nats.ws";
-import { errorToErrorDetail } from "./error/errorToErrorDetail";
 export const sendMessageError = (message) => async (error, options = {}) => {
-    const errorDetail = await errorToErrorDetail({
+    const errorDetail = Errors.errorToErrorDetail({
         error,
         extra: [message.subject],
     });

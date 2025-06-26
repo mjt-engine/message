@@ -1,6 +1,9 @@
 # Changelog
 
 
+## 2025-06-26
+- remove Errors, include dep on mjt-engine/error ([7bf5fcd](https://github.com/mjt-engine/message/commit/7bf5fcdaf0a5df657522d6e68e044987c91948bc)) by Matt Taylor
+
 ## 2025-03-04
 - log for unsub of listener ([8012c09](https://github.com/mjt-engine/message/commit/8012c09cdd3b96c1359e36d803ab76782557b054)) by Matt Taylor
 - log for unsub of listener ([fbc5075](https://github.com/mjt-engine/message/commit/fbc5075d161095d975a0bfd32adee5aab69a925c)) by Matt Taylor

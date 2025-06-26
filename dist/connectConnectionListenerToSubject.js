@@ -1,9 +1,9 @@
 import { Bytes } from "@mjt-engine/byte";
 import { isDefined, isUndefined } from "@mjt-engine/object";
 import { headers as natsHeaders } from "nats.ws";
-import { errorToErrorDetail } from "./error/errorToErrorDetail";
 import { natsHeadersToRecord } from "./natsHeadersToRecord";
 import { sendMessageError } from "./sendMessageError";
+import { Errors } from "@mjt-engine/error";
 export const connectConnectionListenerToSubject = async ({ connection, subject, listener, options = {}, env = {}, signal, }) => {
     const { log = () => { }, queue, maxMessages, timeout } = options;
     log("connectConnectionListenerToSubject: subject: ", subject);
@@ -77,7 +77,7 @@ export const connectConnectionListenerToSubject = async ({ connection, subject, 
             send(result);
         }
         catch (error) {
-            const errorDetail = await errorToErrorDetail({
+            const errorDetail = Errors.errorToErrorDetail({
                 error,
                 extra: [message.subject],
             });
