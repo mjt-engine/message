@@ -4,7 +4,7 @@ import { connect, credsAuthenticator, RequestStrategy, } from "nats.ws";
 import { connectConnectionListenerToSubject, DEFAULT_MAX_MESSAGE_SIZE, } from "./connectConnectionListenerToSubject";
 import { msgToResponseData } from "./msgToResponseData";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
-import { ABORT_SUBJECT_HEADER, CHUNK_HEADER } from "./SPECIAL_HEADERS";
+import { ABORT_SUBJECT_HEADER, CHUNK_HEADER, REPLY_HEADER, } from "./SPECIAL_HEADERS";
 import { Errors } from "@mjt-engine/error";
 import { msgsBufferToCombinedUint8Array } from "./msgsBufferToCombinedUint8Array";
 export const createConnection = async ({ server, creds, token, subscribers = {}, options = {}, env = {}, }) => {
@@ -127,8 +127,8 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
             const { timeoutMs = 60 * 1000 } = options;
             const value = isDefined(payload) ? payload : request;
             const msg = Bytes.toMsgPack({ value });
-            const replySubject = `reply.${subject}.${Date.now()}`;
-            const hs = recordToNatsHeaders(replySubject ? { ...headers, reply: replySubject } : headers);
+            const replySubject = `inbox-${Date.now()}`;
+            const hs = recordToNatsHeaders(replySubject ? { ...headers, [REPLY_HEADER]: replySubject } : headers);
             return new Promise((resolve, reject) => {
                 {
                     const buffer = [];

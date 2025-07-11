@@ -2,6 +2,7 @@
 
 
 ## 2025-07-11
+- change reply header key ([b407557](https://github.com/mjt-engine/message/commit/b40755767b130798d28a9e9cb35ba7c27b005523)) by Matt Taylor
 - better reply message subject ([bd037b8](https://github.com/mjt-engine/message/commit/bd037b842916d9f6c5a4264afbeb2cbb5b51b8f1)) by Matt Taylor
 - added debug logging to sending on subj sub ([06810db](https://github.com/mjt-engine/message/commit/06810dbc201e1131812d28365c7e45486c779b72)) by Matt Taylor
 - fix bugs in recombining msg buffers ([9e4d253](https://github.com/mjt-engine/message/commit/9e4d2536843cdfed984089b200f90e309c8dce2a)) by Matt Taylor
