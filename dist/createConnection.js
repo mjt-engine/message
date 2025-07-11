@@ -157,6 +157,8 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                                         request: payload,
                                         log,
                                     });
+                                    clearTimeout(timeoutId);
+                                    subscription.unsubscribe();
                                     await onResponse(responseData);
                                 }
                                 catch (e) {
@@ -178,6 +180,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                             return;
                         }
                         clearTimeout(timeoutId);
+                        subscription.unsubscribe();
                         const responseData = await msgToResponseData({
                             msg,
                             subject,
@@ -192,10 +195,12 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                 }, timeoutMs);
                 if (signal) {
                     if (signal.aborted) {
+                        clearTimeout(timeoutId);
                         subscription.unsubscribe();
                         throw new Error("Signal already in aborted state");
                     }
                     signal.addEventListener("abort", () => {
+                        clearTimeout(timeoutId);
                         subscription.unsubscribe();
                     });
                 }
