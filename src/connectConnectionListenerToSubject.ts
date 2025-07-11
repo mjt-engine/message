@@ -81,6 +81,10 @@ export const connectConnectionListenerToSubject = async <
           headers: Record<string, string>;
         }> = {}
       ) => {
+        console.log(
+          "connectConnectionListenerToSubject: send called",
+          response
+        );
         const responseHeaders = natsHeaders(
           options.code,
           options.codeDescription
