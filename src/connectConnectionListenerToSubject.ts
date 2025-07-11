@@ -54,7 +54,7 @@ export const connectConnectionListenerToSubject = async <
     });
   }
 
-  const buffer: Uint8Array[] = [];
+  let buffer: (Uint8Array | undefined)[] = [];
 
   for await (const message of subscription) {
     try {
@@ -139,9 +139,11 @@ export const connectConnectionListenerToSubject = async <
           );
         }
         const [currentChunk, totalChunks] = chunkParts.map(Number);
+        if ((buffer.length = 0)) {
+          buffer = new Array(totalChunks).fill(undefined);
+        }
         buffer[currentChunk - 1] = new Uint8Array(message.data);
-        buffer.length = totalChunks;
-        if (buffer.length < totalChunks) {
+        if (buffer.some((msg) => isUndefined(msg))) {
           console.log(
             `connectListenerToSubscription: Waiting for all chunks currently on ${currentChunk}/${totalChunks}`
           );

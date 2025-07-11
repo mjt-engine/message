@@ -150,7 +150,7 @@ export const createConnection = async <
           strategy: RequestStrategy.SentinelMsg,
         }
       );
-      const buffer: Uint8Array[] = [];
+      let buffer: (Uint8Array | undefined)[] = [];
       for await (const resp of iterable) {
         iterable;
         if (signal?.aborted) {
@@ -175,7 +175,9 @@ export const createConnection = async <
             });
           }
           const [currentChunk, totalChunks] = chunkParts.map(Number);
-          buffer.length = totalChunks;
+          if (buffer.length === 0) {
+            buffer = new Array(totalChunks).fill(undefined);
+          }
           buffer[currentChunk - 1] = new Uint8Array(resp.data);
           continue;
         }
@@ -261,7 +263,7 @@ export const createConnection = async <
 
       return new Promise<CM[S]["response"]>((resolve, reject) => {
         {
-          const buffer: Uint8Array[] = [];
+          let buffer: (Uint8Array | undefined)[] = [];
           const subscription = connection.subscribe(replySubject, {
             callback: async (err, msg) => {
               if (isDefined(err)) {
@@ -299,6 +301,9 @@ export const createConnection = async <
                   return;
                 }
                 const [currentChunk, totalChunks] = chunkParts.map(Number);
+                if ((buffer.length = 0)) {
+                  buffer = new Array(totalChunks).fill(undefined);
+                }
                 buffer.length = totalChunks;
                 buffer[currentChunk - 1] = new Uint8Array(msg.data);
                 return;
