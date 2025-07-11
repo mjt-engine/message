@@ -94,19 +94,22 @@ export const connectConnectionListenerToSubject = async <
           connection.publish(message.reply!);
           return;
         }
+        console.log("WTF >>>");
         const replySubject = message.headers?.get(REPLY_HEADER);
+        console.log("<<< WTF");
         const responseMsg = Bytes.toMsgPack({
           value: response,
         } as ValueOrError);
         // TODO chunk replies if needed
         if (isDefined(replySubject)) {
           console.log(
-            "connectConnectionListenerToSubject: Sending response to reply subject:",
-            replySubject
+            `connectConnectionListenerToSubject: Sending response to reply subject: ${replySubject}`
           );
+          console.log("before publish");
           connection.publish(replySubject, responseMsg, {
             headers: responseHeaders,
           });
+          console.log("after publish");
           return;
         }
         message.respond(responseMsg, {
