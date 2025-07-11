@@ -51,9 +51,18 @@ export const connectConnectionListenerToSubject = async ({ connection, subject, 
                     connection.publish(message.reply);
                     return;
                 }
+                const replySubject = message.headers?.get("reply");
                 const responseMsg = Bytes.toMsgPack({
                     value: response,
                 });
+                // TODO chunk replies if needed
+                if (isDefined(replySubject)) {
+                    console.log("connectConnectionListenerToSubject: Sending response to reply subject:", replySubject);
+                    connection.publish(replySubject, responseMsg, {
+                        headers: responseHeaders,
+                    });
+                    return;
+                }
                 message.respond(responseMsg, {
                     headers: responseHeaders,
                 });

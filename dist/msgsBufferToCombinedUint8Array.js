@@ -10,6 +10,7 @@ export const msgsBufferToCombinedUint8Array = (buffer) => {
         combined.set(new Uint8Array(m.data), offset);
         offset += m.data.byteLength;
     }
+    console.log("msgsBufferToCombinedUint8Array: Combined length:", combined.length);
     return combined;
 };
 //# sourceMappingURL=msgsBufferToCombinedUint8Array.js.map
