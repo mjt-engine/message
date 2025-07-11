@@ -79,7 +79,7 @@ export const connectConnectionListenerToSubject = async ({ connection, subject, 
                     throw new Error(`Invalid chunk header format: ${chunkHeader}. Expected format: "current/total"`);
                 }
                 const [currentChunk, totalChunks] = chunkParts.map(Number);
-                buffer[currentChunk - 1] = message;
+                buffer[currentChunk - 1] = new Uint8Array(message.data);
                 buffer.length = totalChunks;
                 if (buffer.some((msg) => isUndefined(msg))) {
                     continue; // Wait for all chunks

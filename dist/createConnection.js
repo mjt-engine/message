@@ -78,7 +78,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                     }
                     const [currentChunk, totalChunks] = chunkParts.map(Number);
                     buffer.length = totalChunks;
-                    buffer[currentChunk - 1] = resp;
+                    buffer[currentChunk - 1] = new Uint8Array(resp.data);
                     continue;
                 }
                 const responseData = await msgToResponseData({
@@ -169,7 +169,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                                 }
                                 const [currentChunk, totalChunks] = chunkParts.map(Number);
                                 buffer.length = totalChunks;
-                                buffer[currentChunk - 1] = msg;
+                                buffer[currentChunk - 1] = new Uint8Array(msg.data);
                                 return;
                             }
                             clearTimeout(timeoutId);
