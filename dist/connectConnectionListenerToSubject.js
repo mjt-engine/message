@@ -5,6 +5,7 @@ import { natsHeadersToRecord } from "./natsHeadersToRecord";
 import { sendMessageError } from "./sendMessageError";
 import { Errors } from "@mjt-engine/error";
 import { ABORT_SUBJECT_HEADER } from "./SPECIAL_HEADERS";
+import { msgsBufferToCombinedUint8Array } from "./msgsBufferToCombinedUint8Array";
 export const DEFAULT_MAX_MESSAGE_SIZE = 1024 * 1024 * 4;
 export const connectConnectionListenerToSubject = async ({ connection, subject, listener, options = {}, env = {}, signal, }) => {
     const { log = () => { }, queue, maxMessages, timeout } = options;
@@ -73,7 +74,8 @@ export const connectConnectionListenerToSubject = async ({ connection, subject, 
                     continue; // Wait for all chunks
                 }
                 // Recombine the chunks
-                const combined = new Uint8Array(buffer.reduce((acc, msg) => acc + msg.data.byteLength, 0));
+                const combined = msgsBufferToCombinedUint8Array(buffer);
+                // buffer.length = 0; // Clear the buffer after recombining
                 data = combined;
             }
             buffer.length = 0; // Clear the buffer after recombining

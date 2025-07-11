@@ -6,6 +6,7 @@ import { msgToResponseData } from "./msgToResponseData";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
 import { ABORT_SUBJECT_HEADER, CHUNK_HEADER } from "./SPECIAL_HEADERS";
 import { Errors } from "@mjt-engine/error";
+import { msgsBufferToCombinedUint8Array } from "./msgsBufferToCombinedUint8Array";
 export const createConnection = async ({ server, creds, token, subscribers = {}, options = {}, env = {}, }) => {
     const { log = () => { }, maxMessageSize = DEFAULT_MAX_MESSAGE_SIZE } = options;
     log("createConnection: server: ", server);
@@ -90,13 +91,8 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
             }
             if (buffer.length > 0) {
                 //recombine the chunks
-                if (buffer.some((msg) => isUndefined(msg))) {
-                    throw Errors.errorToErrorDetail({
-                        error: new Error("Incomplete chunks received"),
-                        extra: [{ subject, request, headers, options, buffer }],
-                    });
-                }
-                const combined = new Uint8Array(buffer.reduce((acc, msg) => acc + msg.data.byteLength, 0));
+                const combined = msgsBufferToCombinedUint8Array(buffer);
+                buffer.length = 0; // Clear the buffer after recombining
                 const responseData = await msgToResponseData({
                     msg: { data: combined },
                     subject,
@@ -144,11 +140,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                             }
                             if (isUndefined(msg.data) || msg.data.byteLength === 0) {
                                 if (buffer.length != 0) {
-                                    if (buffer.some((m) => isUndefined(m))) {
-                                        onError?.(new Error("Incomplete chunks received in response"));
-                                        return;
-                                    }
-                                    const combined = new Uint8Array(buffer.reduce((acc, m) => acc + m.data.byteLength, 0));
+                                    const combined = msgsBufferToCombinedUint8Array(buffer);
                                     buffer.length = 0; // Clear the buffer after recombining
                                     try {
                                         const responseData = await msgToResponseData({

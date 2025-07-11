@@ -2,6 +2,7 @@
 
 
 ## 2025-07-11
+- fix bugs in recombining msg buffers ([9e4d253](https://github.com/mjt-engine/message/commit/9e4d2536843cdfed984089b200f90e309c8dce2a)) by Matt Taylor
 - payload or request for publish value ([3475b82](https://github.com/mjt-engine/message/commit/3475b822a72f0a6a4f1ed931efe976d163b803f5)) by Matt Taylor
 - publish returns response now ([90b292d](https://github.com/mjt-engine/message/commit/90b292df351c396c6069477b84af89a238fafa9c)) by Matt Taylor
 - clear timeout on recieving good response ([b12a0a5](https://github.com/mjt-engine/message/commit/b12a0a512859038ce64ae36eaa83ee71a0c00a8e)) by Matt Taylor
