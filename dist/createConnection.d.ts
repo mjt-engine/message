@@ -28,7 +28,8 @@ export type MessageConnectionInstance<CM extends ConnectionMap> = {
     }) => Promise<CM[S]["response"]>;
     publish: <S extends PartialSubject, EM extends EventMap<S>>(props: {
         subject: S;
-        payload: EM[S];
+        payload?: EM[S];
+        request?: CM[S]["request"];
         headers?: Record<keyof CM[S]["headers"], string>;
         options?: Partial<{
             timeoutMs: number;

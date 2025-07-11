@@ -127,9 +127,10 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
             return msgToResponseData({ msg: resp, subject, request, log });
         },
         publish: async (props) => {
-            const { payload, subject, headers, onResponse, options = {}, signal, onError, } = props;
+            const { payload, request, subject, headers, onResponse, options = {}, signal, onError, } = props;
             const { timeoutMs = 60 * 1000 } = options;
-            const msg = Bytes.toMsgPack({ value: payload });
+            const value = isDefined(payload) ? payload : request;
+            const msg = Bytes.toMsgPack({ value });
             const replySubject = `reply.${subject}.${crypto.randomUUID()}`;
             const hs = recordToNatsHeaders(replySubject ? { ...headers, reply: replySubject } : headers);
             return new Promise((resolve, reject) => {
