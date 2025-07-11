@@ -127,9 +127,79 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
             return msgToResponseData({ msg: resp, subject, request, log });
         },
         publish: async (props) => {
-            const { payload, subject, headers } = props;
-            const hs = recordToNatsHeaders(headers);
+            const { payload, subject, headers, onResponse, options = {}, signal, onError, } = props;
+            const { timeoutMs = 60 * 1000 } = options;
             const msg = Bytes.toMsgPack({ value: payload });
+            const replySubject = onResponse
+                ? `reply.${subject}.${crypto.randomUUID()}`
+                : undefined;
+            const hs = recordToNatsHeaders(replySubject ? { ...headers, reply: replySubject } : headers);
+            if (replySubject && isDefined(onResponse)) {
+                const buffer = [];
+                const subscription = connection.subscribe(replySubject, {
+                    callback: async (err, msg) => {
+                        if (isDefined(err)) {
+                            onError?.(err);
+                            return;
+                        }
+                        if (isUndefined(msg.data) || msg.data.byteLength === 0) {
+                            if (buffer.length != 0) {
+                                if (buffer.some((m) => isUndefined(m))) {
+                                    onError?.(new Error("Incomplete chunks received in response"));
+                                    return;
+                                }
+                                const combined = new Uint8Array(buffer.reduce((acc, m) => acc + m.data.byteLength, 0));
+                                buffer.length = 0; // Clear the buffer after recombining
+                                try {
+                                    const responseData = await msgToResponseData({
+                                        msg: { data: combined },
+                                        subject,
+                                        request: payload,
+                                        log,
+                                    });
+                                    await onResponse(responseData);
+                                }
+                                catch (e) {
+                                    onError?.(e);
+                                }
+                            }
+                            return;
+                        }
+                        if (msg.headers?.get(CHUNK_HEADER)) {
+                            const chunkHeader = msg.headers.get(CHUNK_HEADER);
+                            const chunkParts = chunkHeader.split("/");
+                            if (chunkParts.length !== 2) {
+                                onError?.(new Error("Invalid chunk header format: " + chunkHeader));
+                                return;
+                            }
+                            const [currentChunk, totalChunks] = chunkParts.map(Number);
+                            buffer.length = totalChunks;
+                            buffer[currentChunk - 1] = msg;
+                            return;
+                        }
+                        clearTimeout(timeoutId);
+                        const responseData = await msgToResponseData({
+                            msg,
+                            subject,
+                            request: payload,
+                            log,
+                        });
+                        await onResponse(responseData);
+                    },
+                });
+                const timeoutId = setTimeout(() => {
+                    subscription.unsubscribe();
+                }, timeoutMs);
+                if (signal) {
+                    if (signal.aborted) {
+                        subscription.unsubscribe();
+                        throw new Error("Signal already in aborted state");
+                    }
+                    signal.addEventListener("abort", () => {
+                        subscription.unsubscribe();
+                    });
+                }
+            }
             if (msg.byteLength < maxMessageSize) {
                 return connection.publish(subject, msg, {
                     headers: hs,

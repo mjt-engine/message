@@ -30,6 +30,12 @@ export type MessageConnectionInstance<CM extends ConnectionMap> = {
         subject: S;
         payload: EM[S];
         headers?: Record<keyof CM[S]["headers"], string>;
+        options?: Partial<{
+            timeoutMs: number;
+        }>;
+        onResponse?: (response: CM[S]["response"]) => void | Promise<void>;
+        onError?: (error: unknown) => void;
+        signal?: AbortSignal;
     }) => Promise<void>;
 };
 export declare const createConnection: <CM extends ConnectionMap, E extends Record<string, string> = Record<string, string>>({ server, creds, token, subscribers, options, env, }: {

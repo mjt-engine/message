@@ -2,6 +2,7 @@
 
 
 ## 2025-07-11
+- added publish chunking ([9e5e633](https://github.com/mjt-engine/message/commit/9e5e6338b26d2f39499d545d8284d168cf134643)) by Matt Taylor
 - added chunking to messages ([3941a8a](https://github.com/mjt-engine/message/commit/3941a8a33ae33884669f182d4160d4b6a3e9a824)) by Matt Taylor
 
 ## 2025-06-26
