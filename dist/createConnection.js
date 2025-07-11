@@ -52,7 +52,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                 headers: hs,
                 strategy: RequestStrategy.SentinelMsg,
             });
-            const buffer = [];
+            let buffer = [];
             for await (const resp of iterable) {
                 iterable;
                 if (signal?.aborted) {
@@ -77,7 +77,9 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                         });
                     }
                     const [currentChunk, totalChunks] = chunkParts.map(Number);
-                    buffer.length = totalChunks;
+                    if (buffer.length === 0) {
+                        buffer = new Array(totalChunks).fill(undefined);
+                    }
                     buffer[currentChunk - 1] = new Uint8Array(resp.data);
                     continue;
                 }
@@ -131,7 +133,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
             const hs = recordToNatsHeaders(replySubject ? { ...headers, [REPLY_HEADER]: replySubject } : headers);
             return new Promise((resolve, reject) => {
                 {
-                    const buffer = [];
+                    let buffer = [];
                     const subscription = connection.subscribe(replySubject, {
                         callback: async (err, msg) => {
                             if (isDefined(err)) {
@@ -168,6 +170,9 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                                     return;
                                 }
                                 const [currentChunk, totalChunks] = chunkParts.map(Number);
+                                if ((buffer.length = 0)) {
+                                    buffer = new Array(totalChunks).fill(undefined);
+                                }
                                 buffer.length = totalChunks;
                                 buffer[currentChunk - 1] = new Uint8Array(msg.data);
                                 return;

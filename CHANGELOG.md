@@ -2,6 +2,7 @@
 
 
 ## 2025-07-11
+- fix sparse-array bug ([16fcceb](https://github.com/mjt-engine/message/commit/16fcceb7a4819e2f3f0c36aae5dbe10f1911fe2a)) by Matt Taylor
 - debug msg ([f7036e3](https://github.com/mjt-engine/message/commit/f7036e313d59fab9172ae9c1260d96f1c7a57773)) by Matt Taylor
 - debug msg ([49653c9](https://github.com/mjt-engine/message/commit/49653c9553799f079750e10c49c612499c4dbbfe)) by Matt Taylor
 - debug msg ([8d377af](https://github.com/mjt-engine/message/commit/8d377affe8b5753c834052c22e42c2f3a300d332)) by Matt Taylor

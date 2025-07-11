@@ -24,7 +24,7 @@ export const connectConnectionListenerToSubject = async ({ connection, subject, 
             subscription.unsubscribe();
         });
     }
-    const buffer = [];
+    let buffer = [];
     for await (const message of subscription) {
         try {
             const requestHeaders = natsHeadersToRecord(message.headers);
@@ -79,9 +79,11 @@ export const connectConnectionListenerToSubject = async ({ connection, subject, 
                     throw new Error(`Invalid chunk header format: ${chunkHeader}. Expected format: "current/total"`);
                 }
                 const [currentChunk, totalChunks] = chunkParts.map(Number);
+                if ((buffer.length = 0)) {
+                    buffer = new Array(totalChunks).fill(undefined);
+                }
                 buffer[currentChunk - 1] = new Uint8Array(message.data);
-                buffer.length = totalChunks;
-                if (buffer.length < totalChunks) {
+                if (buffer.some((msg) => isUndefined(msg))) {
                     console.log(`connectListenerToSubscription: Waiting for all chunks currently on ${currentChunk}/${totalChunks}`);
                     continue; // Wait for all chunks
                 }

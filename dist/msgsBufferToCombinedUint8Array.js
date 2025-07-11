@@ -10,6 +10,9 @@ export const msgsBufferToCombinedUint8Array = (buffer) => {
     const combined = new Uint8Array(totalLength);
     let offset = 0;
     for (const item of buffer) {
+        if (isUndefined(item)) {
+            throw new Error("Undefined item in buffer");
+        }
         combined.set(item, offset);
         offset += item.byteLength;
     }
