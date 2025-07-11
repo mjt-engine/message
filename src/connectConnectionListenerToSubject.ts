@@ -142,9 +142,15 @@ export const connectConnectionListenerToSubject = async <
         buffer[currentChunk - 1] = new Uint8Array(message.data);
         buffer.length = totalChunks;
         if (buffer.some((msg) => isUndefined(msg))) {
+          console.log(
+            `connectListenerToSubscription: Waiting for all chunks currently on ${currentChunk}/${totalChunks}`
+          );
           continue; // Wait for all chunks
         }
         // Recombine the chunks
+        console.log(
+          `connectListenerToSubscription: Recombining chunks for ${currentChunk}/${totalChunks}`
+        );
         const combined = msgsBufferToCombinedUint8Array(buffer);
         // buffer.length = 0; // Clear the buffer after recombining
         data = combined;
