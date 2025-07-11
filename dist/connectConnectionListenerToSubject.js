@@ -41,6 +41,7 @@ export const connectConnectionListenerToSubject = async ({ connection, subject, 
                 });
             }
             const send = (response, options = {}) => {
+                console.log("connectConnectionListenerToSubject: send called", response);
                 const responseHeaders = natsHeaders(options.code, options.codeDescription);
                 if (isDefined(options.headers)) {
                     for (const [key, value] of Object.entries(options.headers)) {
