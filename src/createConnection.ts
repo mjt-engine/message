@@ -250,7 +250,7 @@ export const createConnection = async <
       const { timeoutMs = 60 * 1000 } = options;
       const value = isDefined(payload) ? payload : request;
       const msg = Bytes.toMsgPack({ value } as ValueOrError);
-      const replySubject = `reply.${subject}.${crypto.randomUUID()}`;
+      const replySubject = `reply.${subject}.${Date.now()}`;
       const hs = recordToNatsHeaders(
         replySubject ? { ...headers, reply: replySubject } : headers
       );
