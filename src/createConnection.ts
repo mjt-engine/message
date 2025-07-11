@@ -256,10 +256,8 @@ export const createConnection = async <
       const { timeoutMs = 60 * 1000 } = options;
       const value = isDefined(payload) ? payload : request;
       const msg = Bytes.toMsgPack({ value } as ValueOrError);
-      const replySubject = `inbox-${Date.now()}`;
-      const hs = recordToNatsHeaders(
-        replySubject ? { ...headers, [REPLY_HEADER]: replySubject } : headers
-      );
+      const replySubject = `reply.${subject}.${Date.now()}`;
+      const hs = recordToNatsHeaders(headers);
 
       return new Promise<CM[S]["response"]>((resolve, reject) => {
         {
@@ -343,6 +341,7 @@ export const createConnection = async <
         if (msg.byteLength < maxMessageSize) {
           return connection.publish(subject as string, msg, {
             headers: hs,
+            reply: replySubject,
           });
         }
         const chunkCount = Math.ceil(msg.byteLength / maxMessageSize);
@@ -364,6 +363,7 @@ export const createConnection = async <
           };
           connection.publish(subject as string, chunk, {
             headers: recordToNatsHeaders(chunkHeaders),
+            reply: replySubject,
           });
         }
       });

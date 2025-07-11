@@ -1,14 +1,14 @@
 import { Bytes } from "@mjt-engine/byte";
+import { Errors } from "@mjt-engine/error";
 import { isDefined, isUndefined } from "@mjt-engine/object";
-import { Msg, type NatsConnection, headers as natsHeaders } from "nats.ws";
-import type { ConnectionMap } from "./type/ConnectionMap";
-import type { ConnectionListener } from "./type/ConnectionListener";
+import { type NatsConnection, headers as natsHeaders } from "nats.ws";
+import { ABORT_SUBJECT_HEADER } from "./SPECIAL_HEADERS";
+import { msgsBufferToCombinedUint8Array } from "./msgsBufferToCombinedUint8Array";
 import { natsHeadersToRecord } from "./natsHeadersToRecord";
 import { sendMessageError } from "./sendMessageError";
+import type { ConnectionListener } from "./type/ConnectionListener";
+import type { ConnectionMap } from "./type/ConnectionMap";
 import type { ValueOrError } from "./type/ValueOrError";
-import { Errors } from "@mjt-engine/error";
-import { ABORT_SUBJECT_HEADER, REPLY_HEADER } from "./SPECIAL_HEADERS";
-import { msgsBufferToCombinedUint8Array } from "./msgsBufferToCombinedUint8Array";
 
 export const DEFAULT_MAX_MESSAGE_SIZE = 1024 * 1024 * 4;
 
@@ -94,23 +94,23 @@ export const connectConnectionListenerToSubject = async <
           connection.publish(message.reply!);
           return;
         }
-        const replySubject = message.headers?.get(REPLY_HEADER);
+        // const replySubject = message.headers?.get(REPLY_HEADER);
         const responseMsg = Bytes.toMsgPack({
           value: response,
         } as ValueOrError);
         // TODO chunk replies if needed
-        if (isDefined(replySubject)) {
-          console.log(
-            `connectConnectionListenerToSubject: Sending response to reply subject: ${replySubject}`,
-            replySubject
-          );
-          console.log("before publish");
-          connection.publish(replySubject, responseMsg, {
-            headers: responseHeaders,
-          });
-          console.log("after publish");
-          return;
-        }
+        // if (isDefined(replySubject)) {
+        //   console.log(
+        //     `connectConnectionListenerToSubject: Sending response to reply subject: ${replySubject}`,
+        //     replySubject
+        //   );
+        //   console.log("before publish");
+        //   connection.publish(replySubject, responseMsg, {
+        //     headers: responseHeaders,
+        //   });
+        //   console.log("after publish");
+        //   return;
+        // }
         message.respond(responseMsg, {
           headers: responseHeaders,
         });
