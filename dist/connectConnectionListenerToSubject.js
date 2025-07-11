@@ -81,7 +81,7 @@ export const connectConnectionListenerToSubject = async ({ connection, subject, 
                 const [currentChunk, totalChunks] = chunkParts.map(Number);
                 buffer[currentChunk - 1] = new Uint8Array(message.data);
                 buffer.length = totalChunks;
-                if (buffer.some((msg) => isUndefined(msg))) {
+                if (buffer.length < totalChunks) {
                     console.log(`connectListenerToSubscription: Waiting for all chunks currently on ${currentChunk}/${totalChunks}`);
                     continue; // Wait for all chunks
                 }
