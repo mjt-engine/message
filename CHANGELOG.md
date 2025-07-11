@@ -2,6 +2,7 @@
 
 
 ## 2025-07-11
+- debug msg ([8d377af](https://github.com/mjt-engine/message/commit/8d377affe8b5753c834052c22e42c2f3a300d332)) by Matt Taylor
 - use unit-arr instead of Msg for msg-buffer ([346d1ad](https://github.com/mjt-engine/message/commit/346d1ad5e6401dc517064083ec4a104e6c2c7747)) by Matt Taylor
 - debug msg ([33cc7a5](https://github.com/mjt-engine/message/commit/33cc7a51be119fd70927292f7b13af3df865af0f)) by Matt Taylor
 - debug msg ([895ba45](https://github.com/mjt-engine/message/commit/895ba452b503ca609cab902fdd5a84ba19e39340)) by Matt Taylor
