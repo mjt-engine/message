@@ -9,7 +9,7 @@ export const msgsBufferToCombinedUint8Array = (buffer: Msg[]) => {
   const combined = new Uint8Array(totalLength);
   let offset = 0;
   for (const m of buffer) {
-    console.log("typeof m.data", typeof m.data);
+    console.log(`typeof m.data: |${typeof m.data}|`);
     combined.set(new Uint8Array(m.data), offset);
     offset += m.data.byteLength;
   }
