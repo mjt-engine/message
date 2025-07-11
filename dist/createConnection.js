@@ -127,7 +127,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
             const { timeoutMs = 60 * 1000 } = options;
             const value = isDefined(payload) ? payload : request;
             const msg = Bytes.toMsgPack({ value });
-            const replySubject = `reply.${subject}.${crypto.randomUUID()}`;
+            const replySubject = `reply.${subject}.${Date.now()}`;
             const hs = recordToNatsHeaders(replySubject ? { ...headers, reply: replySubject } : headers);
             return new Promise((resolve, reject) => {
                 {

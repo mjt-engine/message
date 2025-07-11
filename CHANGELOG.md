@@ -2,6 +2,7 @@
 
 
 ## 2025-07-11
+- better reply message subject ([bd037b8](https://github.com/mjt-engine/message/commit/bd037b842916d9f6c5a4264afbeb2cbb5b51b8f1)) by Matt Taylor
 - added debug logging to sending on subj sub ([06810db](https://github.com/mjt-engine/message/commit/06810dbc201e1131812d28365c7e45486c779b72)) by Matt Taylor
 - fix bugs in recombining msg buffers ([9e4d253](https://github.com/mjt-engine/message/commit/9e4d2536843cdfed984089b200f90e309c8dce2a)) by Matt Taylor
 - payload or request for publish value ([3475b82](https://github.com/mjt-engine/message/commit/3475b822a72f0a6a4f1ed931efe976d163b803f5)) by Matt Taylor
