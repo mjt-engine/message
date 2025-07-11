@@ -45,7 +45,8 @@ export type MessageConnectionInstance<CM extends ConnectionMap> = {
   }) => Promise<CM[S]["response"]>;
   publish: <S extends PartialSubject, EM extends EventMap<S>>(props: {
     subject: S;
-    payload: EM[S];
+    payload?: EM[S];
+    request?: CM[S]["request"];
     headers?: Record<keyof CM[S]["headers"], string>;
     options?: Partial<{ timeoutMs: number }>;
     onResponse?: (response: CM[S]["response"]) => void | Promise<void>;
@@ -234,7 +235,8 @@ export const createConnection = async <
 
     publish: async <S extends PartialSubject, EM extends EventMap<S>>(props: {
       subject: S;
-      payload: EM[S];
+      payload?: EM[S];
+      request?: CM[S]["request"];
       headers?: Record<keyof CM[S]["headers"], string>;
       options?: Partial<{ timeoutMs: number }>;
       onResponse?: (response: CM[S]["response"]) => void | Promise<void>;
@@ -243,6 +245,7 @@ export const createConnection = async <
     }): Promise<CM[S]["response"]> => {
       const {
         payload,
+        request,
         subject,
         headers,
         onResponse,
@@ -251,7 +254,8 @@ export const createConnection = async <
         onError,
       } = props;
       const { timeoutMs = 60 * 1000 } = options;
-      const msg = Bytes.toMsgPack({ value: payload } as ValueOrError);
+      const value = isDefined(payload) ? payload : request;
+      const msg = Bytes.toMsgPack({ value } as ValueOrError);
       const replySubject = `reply.${subject}.${crypto.randomUUID()}`;
       const hs = recordToNatsHeaders(
         replySubject ? { ...headers, reply: replySubject } : headers
