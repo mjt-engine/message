@@ -150,7 +150,7 @@ export const createConnection = async <
           strategy: RequestStrategy.SentinelMsg,
         }
       );
-      const buffer: Msg[] = [];
+      const buffer: Uint8Array[] = [];
       for await (const resp of iterable) {
         iterable;
         if (signal?.aborted) {
@@ -176,7 +176,7 @@ export const createConnection = async <
           }
           const [currentChunk, totalChunks] = chunkParts.map(Number);
           buffer.length = totalChunks;
-          buffer[currentChunk - 1] = resp;
+          buffer[currentChunk - 1] = new Uint8Array(resp.data);
           continue;
         }
         const responseData = await msgToResponseData({
@@ -261,7 +261,7 @@ export const createConnection = async <
 
       return new Promise<CM[S]["response"]>((resolve, reject) => {
         {
-          const buffer: Msg[] = [];
+          const buffer: Uint8Array[] = [];
           const subscription = connection.subscribe(replySubject, {
             callback: async (err, msg) => {
               if (isDefined(err)) {
@@ -300,7 +300,7 @@ export const createConnection = async <
                 }
                 const [currentChunk, totalChunks] = chunkParts.map(Number);
                 buffer.length = totalChunks;
-                buffer[currentChunk - 1] = msg;
+                buffer[currentChunk - 1] = new Uint8Array(msg.data);
                 return;
               }
               clearTimeout(timeoutId);
