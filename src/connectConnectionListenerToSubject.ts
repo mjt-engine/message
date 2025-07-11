@@ -7,7 +7,7 @@ import { natsHeadersToRecord } from "./natsHeadersToRecord";
 import { sendMessageError } from "./sendMessageError";
 import type { ValueOrError } from "./type/ValueOrError";
 import { Errors } from "@mjt-engine/error";
-import { ABORT_SUBJECT_HEADER } from "./SPECIAL_HEADERS";
+import { ABORT_SUBJECT_HEADER, REPLY_HEADER } from "./SPECIAL_HEADERS";
 import { msgsBufferToCombinedUint8Array } from "./msgsBufferToCombinedUint8Array";
 
 export const DEFAULT_MAX_MESSAGE_SIZE = 1024 * 1024 * 4;
@@ -94,7 +94,7 @@ export const connectConnectionListenerToSubject = async <
           connection.publish(message.reply!);
           return;
         }
-        const replySubject = message.headers?.get("reply");
+        const replySubject = message.headers?.get(REPLY_HEADER);
         const responseMsg = Bytes.toMsgPack({
           value: response,
         } as ValueOrError);

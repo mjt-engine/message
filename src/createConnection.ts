@@ -15,7 +15,11 @@ import {
 } from "./connectConnectionListenerToSubject";
 import { msgToResponseData } from "./msgToResponseData";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
-import { ABORT_SUBJECT_HEADER, CHUNK_HEADER } from "./SPECIAL_HEADERS";
+import {
+  ABORT_SUBJECT_HEADER,
+  CHUNK_HEADER,
+  REPLY_HEADER,
+} from "./SPECIAL_HEADERS";
 import type { ConnectionListener } from "./type/ConnectionListener";
 import type { ConnectionMap } from "./type/ConnectionMap";
 import type { EventMap } from "./type/EventMap";
@@ -250,9 +254,9 @@ export const createConnection = async <
       const { timeoutMs = 60 * 1000 } = options;
       const value = isDefined(payload) ? payload : request;
       const msg = Bytes.toMsgPack({ value } as ValueOrError);
-      const replySubject = `reply.${subject}.${Date.now()}`;
+      const replySubject = `inbox-${Date.now()}`;
       const hs = recordToNatsHeaders(
-        replySubject ? { ...headers, reply: replySubject } : headers
+        replySubject ? { ...headers, [REPLY_HEADER]: replySubject } : headers
       );
 
       return new Promise<CM[S]["response"]>((resolve, reject) => {
