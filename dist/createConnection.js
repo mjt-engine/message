@@ -218,7 +218,11 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                 for (let i = 0; i < chunks.length; i++) {
                     const chunk = chunks[i];
                     const chunkHeader = `${i + 1}/${chunkCount}`;
-                    const chunkHeaders = { ...headers, [CHUNK_HEADER]: chunkHeader };
+                    const chunkHeaders = {
+                        ...headers,
+                        [CHUNK_HEADER]: chunkHeader,
+                        [REPLY_HEADER]: replySubject,
+                    };
                     connection.publish(subject, chunk, {
                         headers: recordToNatsHeaders(chunkHeaders),
                     });

@@ -59,7 +59,7 @@ export const connectConnectionListenerToSubject = async ({ connection, subject, 
                 });
                 // TODO chunk replies if needed
                 if (isDefined(replySubject)) {
-                    console.log(`connectConnectionListenerToSubject: Sending response to reply subject: ${replySubject}`);
+                    console.log(`connectConnectionListenerToSubject: Sending response to reply subject: ${replySubject}`, replySubject);
                     console.log("before publish");
                     connection.publish(replySubject, responseMsg, {
                         headers: responseHeaders,
