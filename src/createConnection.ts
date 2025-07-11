@@ -22,6 +22,7 @@ import type { EventMap } from "./type/EventMap";
 import type { PartialSubject } from "./type/PartialSubject";
 import type { ValueOrError } from "./type/ValueOrError";
 import { Errors } from "@mjt-engine/error";
+import { msgsBufferToCombinedUint8Array } from "./msgsBufferToCombinedUint8Array";
 
 export type MessageConnection = NatsConnection;
 export type MessageConnectionStats = Stats;
@@ -184,15 +185,8 @@ export const createConnection = async <
       }
       if (buffer.length > 0) {
         //recombine the chunks
-        if (buffer.some((msg) => isUndefined(msg))) {
-          throw Errors.errorToErrorDetail({
-            error: new Error("Incomplete chunks received"),
-            extra: [{ subject, request, headers, options, buffer }],
-          });
-        }
-        const combined = new Uint8Array(
-          buffer.reduce((acc, msg) => acc + msg.data.byteLength, 0)
-        );
+        const combined = msgsBufferToCombinedUint8Array(buffer);
+        buffer.length = 0; // Clear the buffer after recombining
         const responseData = await msgToResponseData({
           msg: { data: combined },
           subject,
@@ -272,15 +266,7 @@ export const createConnection = async <
               }
               if (isUndefined(msg.data) || msg.data.byteLength === 0) {
                 if (buffer.length != 0) {
-                  if (buffer.some((m) => isUndefined(m))) {
-                    onError?.(
-                      new Error("Incomplete chunks received in response")
-                    );
-                    return;
-                  }
-                  const combined = new Uint8Array(
-                    buffer.reduce((acc, m) => acc + m.data.byteLength, 0)
-                  );
+                  const combined = msgsBufferToCombinedUint8Array(buffer);
                   buffer.length = 0; // Clear the buffer after recombining
                   try {
                     const responseData = await msgToResponseData({
