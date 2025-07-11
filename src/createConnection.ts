@@ -304,7 +304,9 @@ export const createConnection = async <
                 if ((buffer.length = 0)) {
                   buffer = new Array(totalChunks).fill(undefined);
                 }
-                buffer.length = totalChunks;
+                if (buffer.length === 0) {
+                  buffer = new Array(totalChunks).fill(undefined);
+                }
                 buffer[currentChunk - 1] = new Uint8Array(msg.data);
                 return;
               }

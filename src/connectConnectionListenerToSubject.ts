@@ -139,7 +139,7 @@ export const connectConnectionListenerToSubject = async <
           );
         }
         const [currentChunk, totalChunks] = chunkParts.map(Number);
-        if ((buffer.length = 0)) {
+        if (buffer.length === 0) {
           buffer = new Array(totalChunks).fill(undefined);
         }
         buffer[currentChunk - 1] = new Uint8Array(message.data);
@@ -154,7 +154,6 @@ export const connectConnectionListenerToSubject = async <
           `connectListenerToSubscription: Recombining chunks for ${currentChunk}/${totalChunks}`
         );
         const combined = msgsBufferToCombinedUint8Array(buffer);
-        // buffer.length = 0; // Clear the buffer after recombining
         data = combined;
       }
       buffer.length = 0; // Clear the buffer after recombining
