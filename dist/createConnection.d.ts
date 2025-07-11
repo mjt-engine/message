@@ -36,7 +36,7 @@ export type MessageConnectionInstance<CM extends ConnectionMap> = {
         onResponse?: (response: CM[S]["response"]) => void | Promise<void>;
         onError?: (error: unknown) => void;
         signal?: AbortSignal;
-    }) => Promise<void>;
+    }) => Promise<CM[S]["response"]>;
 };
 export declare const createConnection: <CM extends ConnectionMap, E extends Record<string, string> = Record<string, string>>({ server, creds, token, subscribers, options, env, }: {
     server: string[] | string;
