@@ -51,9 +51,7 @@ export const connectConnectionListenerToSubject = async ({ connection, subject, 
                     connection.publish(message.reply);
                     return;
                 }
-                console.log("WTF >>>");
                 const replySubject = message.headers?.get(REPLY_HEADER);
-                console.log("<<< WTF");
                 const responseMsg = Bytes.toMsgPack({
                     value: response,
                 });

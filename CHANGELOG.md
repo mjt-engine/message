@@ -2,6 +2,7 @@
 
 
 ## 2025-07-11
+- debug msg ([895ba45](https://github.com/mjt-engine/message/commit/895ba452b503ca609cab902fdd5a84ba19e39340)) by Matt Taylor
 - fix bug with reply header on chunks ([9f159c5](https://github.com/mjt-engine/message/commit/9f159c5894b5ef2b72e41fff568a9d26c1685a24)) by Matt Taylor
 - added extra debug ([4f053c1](https://github.com/mjt-engine/message/commit/4f053c1b7a65740819482c5a6626faf388ef268f)) by Matt Taylor
 - change reply header key ([b407557](https://github.com/mjt-engine/message/commit/b40755767b130798d28a9e9cb35ba7c27b005523)) by Matt Taylor
