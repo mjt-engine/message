@@ -1,22 +1,27 @@
 import { Bytes } from "@mjt-engine/byte";
 import { isDefined, isUndefined, toMany } from "@mjt-engine/object";
 import {
-  RequestStrategy,
   connect,
   credsAuthenticator,
+  Msg,
+  RequestStrategy,
   type NatsConnection,
   type Stats,
   type Status,
 } from "nats.ws";
-import type { ConnectionMap } from "./type/ConnectionMap";
-import type { ConnectionSpecialHeader } from "./type/ConnectionSpecialHeader";
-import type { ConnectionListener } from "./type/ConnectionListener";
-import { connectConnectionListenerToSubject } from "./connectConnectionListenerToSubject";
+import {
+  connectConnectionListenerToSubject,
+  DEFAULT_MAX_MESSAGE_SIZE,
+} from "./connectConnectionListenerToSubject";
 import { msgToResponseData } from "./msgToResponseData";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
-import type { ValueOrError } from "./type/ValueOrError";
-import type { PartialSubject } from "./type/PartialSubject";
+import { ABORT_SUBJECT_HEADER, CHUNK_HEADER } from "./SPECIAL_HEADERS";
+import type { ConnectionListener } from "./type/ConnectionListener";
+import type { ConnectionMap } from "./type/ConnectionMap";
 import type { EventMap } from "./type/EventMap";
+import type { PartialSubject } from "./type/PartialSubject";
+import type { ValueOrError } from "./type/ValueOrError";
+import { Errors } from "@mjt-engine/error";
 
 export type MessageConnection = NatsConnection;
 export type MessageConnectionStats = Stats;
@@ -62,10 +67,11 @@ export const createConnection = async <
   token?: string;
   options?: Partial<{
     log: (message: unknown, ...extra: unknown[]) => void;
+    maxMessageSize?: number;
   }>;
   env?: Partial<E>;
 }): Promise<MessageConnectionInstance<CM>> => {
-  const { log = () => {} } = options;
+  const { log = () => {}, maxMessageSize = DEFAULT_MAX_MESSAGE_SIZE } = options;
   log("createConnection: server: ", server);
   const connection: MessageConnection = await connect({
     servers: [...toMany(server)],
@@ -95,7 +101,7 @@ export const createConnection = async <
       subject: S;
       request: CM[S]["request"];
       headers?: Record<keyof CM[S]["headers"], string>;
-      options?: Partial<{ timeoutMs: number }>;
+      options?: Partial<{ timeoutMs: number; maxMessageSize: number }>;
       onResponse: (response: CM[S]["response"]) => void | Promise<void>;
       signal?: AbortSignal;
     }) => {
@@ -107,16 +113,19 @@ export const createConnection = async <
         onResponse,
         signal,
       } = props;
+      const {
+        timeoutMs = 60 * 1000,
+        maxMessageSize = DEFAULT_MAX_MESSAGE_SIZE,
+      } = options;
       const requestMsg = Bytes.toMsgPack({ value: request } as ValueOrError);
-      const { timeoutMs = 60 * 1000 } = options;
+
+      if (requestMsg.byteLength > maxMessageSize) {
+      }
 
       const hs = recordToNatsHeaders(headers);
       if (isDefined(signal)) {
         const abortSubject = `abort.${Date.now()}.${crypto.randomUUID()}`;
-        hs?.set(
-          "abort-subject" satisfies ConnectionSpecialHeader,
-          abortSubject
-        );
+        hs?.set(ABORT_SUBJECT_HEADER, abortSubject);
         signal.addEventListener("abort", () => {
           connection.publish(abortSubject);
         });
@@ -131,6 +140,7 @@ export const createConnection = async <
           strategy: RequestStrategy.SentinelMsg,
         }
       );
+      const buffer: Msg[] = [];
       for await (const resp of iterable) {
         iterable;
         if (signal?.aborted) {
@@ -139,8 +149,47 @@ export const createConnection = async <
         if (isUndefined(resp.data) || resp.data.byteLength === 0) {
           break;
         }
+        const chunkHeader = resp.headers?.get(CHUNK_HEADER);
+        if (chunkHeader) {
+          const chunkParts = chunkHeader.split("/");
+          if (chunkParts.length !== 2) {
+            throw Errors.errorToErrorDetail({
+              error: new Error("Invalid chunk header format"),
+              extra: [{ subject, request, headers, options }],
+            });
+          }
+          if (resp.headers?.hasError) {
+            throw Errors.errorToErrorDetail({
+              error: new Error("Chunked response has error"),
+              extra: [{ subject, request, headers, options, resp }],
+            });
+          }
+          const [currentChunk, totalChunks] = chunkParts.map(Number);
+          buffer.length = totalChunks;
+          buffer[currentChunk - 1] = resp;
+          continue;
+        }
         const responseData = await msgToResponseData({
           msg: resp,
+          subject,
+          request,
+          log,
+        });
+        await onResponse(responseData);
+      }
+      if (buffer.length > 0) {
+        //recombine the chunks
+        if (buffer.some((msg) => isUndefined(msg))) {
+          throw Errors.errorToErrorDetail({
+            error: new Error("Incomplete chunks received"),
+            extra: [{ subject, request, headers, options, buffer }],
+          });
+        }
+        const combined = new Uint8Array(
+          buffer.reduce((acc, msg) => acc + msg.data.byteLength, 0)
+        );
+        const responseData = await msgToResponseData({
+          msg: { data: combined },
           subject,
           request,
           log,
@@ -168,21 +217,47 @@ export const createConnection = async <
       if (isUndefined(resp.data) || resp.data.byteLength === 0) {
         return undefined;
       }
+      if (resp.headers?.get(CHUNK_HEADER)) {
+        throw Errors.errorToErrorDetail({
+          error: new Error(
+            "Chunked response recieved. Use requestMany instead."
+          ),
+          extra: [{ subject, request, headers, options }],
+        });
+      }
       return msgToResponseData({ msg: resp, subject, request, log });
     },
+
     publish: async <S extends PartialSubject, EM extends EventMap<S>>(props: {
       subject: S;
       payload: EM[S];
       headers?: Record<keyof CM[S]["headers"], string>;
     }): Promise<void> => {
       const { payload, subject, headers } = props;
-      const msg = Bytes.toMsgPack({ value: payload } as ValueOrError);
-
       const hs = recordToNatsHeaders(headers);
-
-      return connection.publish(subject as string, msg, {
-        headers: hs,
-      });
+      const msg = Bytes.toMsgPack({ value: payload } as ValueOrError);
+      if (msg.byteLength < maxMessageSize) {
+        return connection.publish(subject as string, msg, {
+          headers: hs,
+        });
+      }
+      const chunkCount = Math.ceil(msg.byteLength / maxMessageSize);
+      const chunks = [];
+      for (let i = 0; i < chunkCount; i++) {
+        const start = i * maxMessageSize;
+        const end = start + maxMessageSize;
+        const chunk = msg.slice(start, end);
+        chunks.push(chunk);
+      }
+      // Publish each chunk separately
+      for (let i = 0; i < chunks.length; i++) {
+        const chunk = chunks[i];
+        const chunkHeader = `${i + 1}/${chunkCount}`;
+        const chunkHeaders = { ...headers, [CHUNK_HEADER]: chunkHeader };
+        connection.publish(subject as string, chunk, {
+          headers: recordToNatsHeaders(chunkHeaders),
+        });
+      }
     },
   };
 };

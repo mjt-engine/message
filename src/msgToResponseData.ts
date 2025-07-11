@@ -1,5 +1,5 @@
 import { Bytes } from "@mjt-engine/byte";
-import type { Msg } from "nats.ws";
+import type { Msg, MsgHdrs } from "nats.ws";
 import type { ValueOrError } from "./type/ValueOrError";
 import { isDefined } from "@mjt-engine/object";
 import { Errors } from "@mjt-engine/error";
@@ -10,7 +10,8 @@ export const msgToResponseData = async ({
   request,
   log,
 }: {
-  msg: Msg;
+  msg: Msg | { data: Uint8Array; headers?: MsgHdrs };
+
   subject: unknown;
   request: unknown;
   log: (message: unknown, ...extra: unknown[]) => void;
