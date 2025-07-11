@@ -1,11 +1,13 @@
 import { Bytes } from "@mjt-engine/byte";
 import { isDefined, isUndefined, toMany } from "@mjt-engine/object";
-import { RequestStrategy, connect, credsAuthenticator, } from "nats.ws";
-import { connectConnectionListenerToSubject } from "./connectConnectionListenerToSubject";
+import { connect, credsAuthenticator, RequestStrategy, } from "nats.ws";
+import { connectConnectionListenerToSubject, DEFAULT_MAX_MESSAGE_SIZE, } from "./connectConnectionListenerToSubject";
 import { msgToResponseData } from "./msgToResponseData";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
+import { ABORT_SUBJECT_HEADER, CHUNK_HEADER } from "./SPECIAL_HEADERS";
+import { Errors } from "@mjt-engine/error";
 export const createConnection = async ({ server, creds, token, subscribers = {}, options = {}, env = {}, }) => {
-    const { log = () => { } } = options;
+    const { log = () => { }, maxMessageSize = DEFAULT_MAX_MESSAGE_SIZE } = options;
     log("createConnection: server: ", server);
     const connection = await connect({
         servers: [...toMany(server)],
@@ -32,12 +34,14 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
         connection,
         requestMany: async (props) => {
             const { request, subject, headers, options = {}, onResponse, signal, } = props;
+            const { timeoutMs = 60 * 1000, maxMessageSize = DEFAULT_MAX_MESSAGE_SIZE, } = options;
             const requestMsg = Bytes.toMsgPack({ value: request });
-            const { timeoutMs = 60 * 1000 } = options;
+            if (requestMsg.byteLength > maxMessageSize) {
+            }
             const hs = recordToNatsHeaders(headers);
             if (isDefined(signal)) {
                 const abortSubject = `abort.${Date.now()}.${crypto.randomUUID()}`;
-                hs?.set("abort-subject", abortSubject);
+                hs?.set(ABORT_SUBJECT_HEADER, abortSubject);
                 signal.addEventListener("abort", () => {
                     connection.publish(abortSubject);
                 });
@@ -47,6 +51,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                 headers: hs,
                 strategy: RequestStrategy.SentinelMsg,
             });
+            const buffer = [];
             for await (const resp of iterable) {
                 iterable;
                 if (signal?.aborted) {
@@ -55,8 +60,45 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                 if (isUndefined(resp.data) || resp.data.byteLength === 0) {
                     break;
                 }
+                const chunkHeader = resp.headers?.get(CHUNK_HEADER);
+                if (chunkHeader) {
+                    const chunkParts = chunkHeader.split("/");
+                    if (chunkParts.length !== 2) {
+                        throw Errors.errorToErrorDetail({
+                            error: new Error("Invalid chunk header format"),
+                            extra: [{ subject, request, headers, options }],
+                        });
+                    }
+                    if (resp.headers?.hasError) {
+                        throw Errors.errorToErrorDetail({
+                            error: new Error("Chunked response has error"),
+                            extra: [{ subject, request, headers, options, resp }],
+                        });
+                    }
+                    const [currentChunk, totalChunks] = chunkParts.map(Number);
+                    buffer.length = totalChunks;
+                    buffer[currentChunk - 1] = resp;
+                    continue;
+                }
                 const responseData = await msgToResponseData({
                     msg: resp,
+                    subject,
+                    request,
+                    log,
+                });
+                await onResponse(responseData);
+            }
+            if (buffer.length > 0) {
+                //recombine the chunks
+                if (buffer.some((msg) => isUndefined(msg))) {
+                    throw Errors.errorToErrorDetail({
+                        error: new Error("Incomplete chunks received"),
+                        extra: [{ subject, request, headers, options, buffer }],
+                    });
+                }
+                const combined = new Uint8Array(buffer.reduce((acc, msg) => acc + msg.data.byteLength, 0));
+                const responseData = await msgToResponseData({
+                    msg: { data: combined },
                     subject,
                     request,
                     log,
@@ -76,15 +118,40 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
             if (isUndefined(resp.data) || resp.data.byteLength === 0) {
                 return undefined;
             }
+            if (resp.headers?.get(CHUNK_HEADER)) {
+                throw Errors.errorToErrorDetail({
+                    error: new Error("Chunked response recieved. Use requestMany instead."),
+                    extra: [{ subject, request, headers, options }],
+                });
+            }
             return msgToResponseData({ msg: resp, subject, request, log });
         },
         publish: async (props) => {
             const { payload, subject, headers } = props;
-            const msg = Bytes.toMsgPack({ value: payload });
             const hs = recordToNatsHeaders(headers);
-            return connection.publish(subject, msg, {
-                headers: hs,
-            });
+            const msg = Bytes.toMsgPack({ value: payload });
+            if (msg.byteLength < maxMessageSize) {
+                return connection.publish(subject, msg, {
+                    headers: hs,
+                });
+            }
+            const chunkCount = Math.ceil(msg.byteLength / maxMessageSize);
+            const chunks = [];
+            for (let i = 0; i < chunkCount; i++) {
+                const start = i * maxMessageSize;
+                const end = start + maxMessageSize;
+                const chunk = msg.slice(start, end);
+                chunks.push(chunk);
+            }
+            // Publish each chunk separately
+            for (let i = 0; i < chunks.length; i++) {
+                const chunk = chunks[i];
+                const chunkHeader = `${i + 1}/${chunkCount}`;
+                const chunkHeaders = { ...headers, [CHUNK_HEADER]: chunkHeader };
+                connection.publish(subject, chunk, {
+                    headers: recordToNatsHeaders(chunkHeaders),
+                });
+            }
         },
     };
 };

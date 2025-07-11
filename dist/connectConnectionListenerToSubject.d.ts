@@ -1,6 +1,7 @@
 import { type NatsConnection } from "nats.ws";
 import type { ConnectionMap } from "./type/ConnectionMap";
 import type { ConnectionListener } from "./type/ConnectionListener";
+export declare const DEFAULT_MAX_MESSAGE_SIZE: number;
 export declare const connectConnectionListenerToSubject: <S extends keyof CM, CM extends ConnectionMap, E extends Record<string, string>>({ connection, subject, listener, options, env, signal, }: {
     subject: string;
     connection: NatsConnection;

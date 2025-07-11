@@ -1,8 +1,8 @@
 import { type NatsConnection, type Stats, type Status } from "nats.ws";
-import type { ConnectionMap } from "./type/ConnectionMap";
 import type { ConnectionListener } from "./type/ConnectionListener";
-import type { PartialSubject } from "./type/PartialSubject";
+import type { ConnectionMap } from "./type/ConnectionMap";
 import type { EventMap } from "./type/EventMap";
+import type { PartialSubject } from "./type/PartialSubject";
 export type MessageConnection = NatsConnection;
 export type MessageConnectionStats = Stats;
 export type MessageConnectionStatus = Status;
@@ -39,6 +39,7 @@ export declare const createConnection: <CM extends ConnectionMap, E extends Reco
     token?: string;
     options?: Partial<{
         log: (message: unknown, ...extra: unknown[]) => void;
+        maxMessageSize?: number;
     }>;
     env?: Partial<E>;
 }) => Promise<MessageConnectionInstance<CM>>;

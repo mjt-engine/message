@@ -1,6 +1,9 @@
 # Changelog
 
 
+## 2025-07-11
+- added chunking to messages ([3941a8a](https://github.com/mjt-engine/message/commit/3941a8a33ae33884669f182d4160d4b6a3e9a824)) by Matt Taylor
+
 ## 2025-06-26
 - remove Errors, include dep on mjt-engine/error ([7bf5fcd](https://github.com/mjt-engine/message/commit/7bf5fcdaf0a5df657522d6e68e044987c91948bc)) by Matt Taylor
 

@@ -6,6 +6,7 @@ export declare const Messages: {
         token?: string;
         options?: Partial<{
             log: (message: unknown, ...extra: unknown[]) => void;
+            maxMessageSize?: number;
         }>;
         env?: Partial<E>;
     }) => Promise<import("./createConnection").MessageConnectionInstance<CM>>;

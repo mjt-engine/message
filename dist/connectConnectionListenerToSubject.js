@@ -4,6 +4,8 @@ import { headers as natsHeaders } from "nats.ws";
 import { natsHeadersToRecord } from "./natsHeadersToRecord";
 import { sendMessageError } from "./sendMessageError";
 import { Errors } from "@mjt-engine/error";
+import { ABORT_SUBJECT_HEADER } from "./SPECIAL_HEADERS";
+export const DEFAULT_MAX_MESSAGE_SIZE = 1024 * 1024 * 4;
 export const connectConnectionListenerToSubject = async ({ connection, subject, listener, options = {}, env = {}, signal, }) => {
     const { log = () => { }, queue, maxMessages, timeout } = options;
     log("connectConnectionListenerToSubject: subject: ", subject);
@@ -21,13 +23,13 @@ export const connectConnectionListenerToSubject = async ({ connection, subject, 
             subscription.unsubscribe();
         });
     }
+    const buffer = [];
     for await (const message of subscription) {
         try {
-            const valueOrError = Bytes.msgPackToObject(message.data);
             const requestHeaders = natsHeadersToRecord(message.headers);
             const abortController = new AbortController();
-            if (isDefined(requestHeaders?.["abort-subject"])) {
-                const abortSubject = requestHeaders["abort-subject"];
+            if (isDefined(requestHeaders?.[ABORT_SUBJECT_HEADER])) {
+                const abortSubject = requestHeaders[ABORT_SUBJECT_HEADER];
                 const abortSubscription = connection.subscribe(abortSubject, {
                     max: 1,
                     callback: () => {
@@ -57,6 +59,25 @@ export const connectConnectionListenerToSubject = async ({ connection, subject, 
             };
             const sendError = async (error, options = {}) => sendMessageError(message)(error, options);
             const unsubscribe = (maxMessages) => subscription.unsubscribe(maxMessages);
+            const chunkHeader = message.headers?.get("chunk");
+            let data = message.data;
+            if (isDefined(chunkHeader)) {
+                const chunkParts = chunkHeader.split("/");
+                if (chunkParts.length !== 2) {
+                    throw new Error(`Invalid chunk header format: ${chunkHeader}. Expected format: "current/total"`);
+                }
+                const [currentChunk, totalChunks] = chunkParts.map(Number);
+                buffer[currentChunk - 1] = message;
+                buffer.length = totalChunks;
+                if (buffer.some((msg) => isUndefined(msg))) {
+                    continue; // Wait for all chunks
+                }
+                // Recombine the chunks
+                const combined = new Uint8Array(buffer.reduce((acc, msg) => acc + msg.data.byteLength, 0));
+                data = combined;
+            }
+            buffer.length = 0; // Clear the buffer after recombining
+            const valueOrError = Bytes.msgPackToObject(data);
             if (isDefined(valueOrError.error)) {
                 log("Error: connectListenerToSubscription: valueOrError.error", valueOrError.error);
                 continue;
