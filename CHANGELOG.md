@@ -2,6 +2,7 @@
 
 
 ## 2025-07-11
+- reply field not reply header ([179f746](https://github.com/mjt-engine/message/commit/179f74657444bde3aa94fda309ba8954d78b01d5)) by Matt Taylor
 - fix sparse-array bug ([0bc9054](https://github.com/mjt-engine/message/commit/0bc905495d0440bb073f66ccade521d2567f52d5)) by Matt Taylor
 - fix sparse-array bug ([16fcceb](https://github.com/mjt-engine/message/commit/16fcceb7a4819e2f3f0c36aae5dbe10f1911fe2a)) by Matt Taylor
 - debug msg ([f7036e3](https://github.com/mjt-engine/message/commit/f7036e313d59fab9172ae9c1260d96f1c7a57773)) by Matt Taylor

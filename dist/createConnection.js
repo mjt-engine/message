@@ -129,8 +129,8 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
             const { timeoutMs = 60 * 1000 } = options;
             const value = isDefined(payload) ? payload : request;
             const msg = Bytes.toMsgPack({ value });
-            const replySubject = `inbox-${Date.now()}`;
-            const hs = recordToNatsHeaders(replySubject ? { ...headers, [REPLY_HEADER]: replySubject } : headers);
+            const replySubject = `reply.${subject}.${Date.now()}`;
+            const hs = recordToNatsHeaders(headers);
             return new Promise((resolve, reject) => {
                 {
                     let buffer = [];
@@ -211,6 +211,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                 if (msg.byteLength < maxMessageSize) {
                     return connection.publish(subject, msg, {
                         headers: hs,
+                        reply: replySubject,
                     });
                 }
                 const chunkCount = Math.ceil(msg.byteLength / maxMessageSize);
@@ -232,6 +233,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                     };
                     connection.publish(subject, chunk, {
                         headers: recordToNatsHeaders(chunkHeaders),
+                        reply: replySubject,
                     });
                 }
             });
