@@ -22,15 +22,13 @@
   "dependencies": {
     "@mjt-engine/byte": "github:mjt-engine/byte",
     "@mjt-engine/error": "github:mjt-engine/error",
-    "@mjt-engine/object": "github:mjt-engine/object"
-  },
-  "peerDependencies": {
-    "nats.ws": "^1.27.0"
+    "@mjt-engine/object": "github:mjt-engine/object",
+    "nats.ws": "^1.30.3"
   },
   "devDependencies": {
     "crypto-browserify": "^3.12.1",
-    "esbuild": "^0.21.5",
-    "typedoc": "^0.27.9",
+    "esbuild": "^0.25.6",
+    "typedoc": "^0.28.7",
     "typescript": "^5.8.3"
   }
 }
