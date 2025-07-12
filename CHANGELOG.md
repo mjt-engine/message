@@ -2,6 +2,7 @@
 
 
 ## 2025-07-11
+- remove debug logging ([efafd95](https://github.com/mjt-engine/message/commit/efafd958aa1165d0969ecdad903883803ab8aee8)) by Matt Taylor
 - debugging chunked response ([8fd1c7f](https://github.com/mjt-engine/message/commit/8fd1c7f01b13d15d1f09746667422538ffadde5d)) by Matt Taylor
 - debugging chunked response ([b0909da](https://github.com/mjt-engine/message/commit/b0909da8d8ea0b0b001b0416f3a5849883a0fefa)) by Matt Taylor
 - debugging chunked response ([948a937](https://github.com/mjt-engine/message/commit/948a937c312dd668d012325d1c30a78a24b9efa4)) by Matt Taylor
