@@ -261,7 +261,6 @@ export const createConnection = async <
 
       const result = new Promise<CM[S]["response"]>(async (resolve, reject) => {
         let buffer: (Uint8Array | undefined)[] = [];
-        console.log("subscribe to reply subject:", replySubject);
         const subscription = connection.subscribe(replySubject);
         const timeoutId = setTimeout(() => {
           subscription.unsubscribe();
@@ -274,9 +273,7 @@ export const createConnection = async <
             return;
           }
 
-          console.log("msg stage 1");
           if (isUndefined(msg.data) || msg.data.byteLength === 0) {
-            console.log("msg stage 1a DATA", msg.data);
             if (buffer.length != 0) {
               const combined = msgsBufferToCombinedUint8Array(buffer);
               buffer.length = 0; // Clear the buffer after recombining
@@ -297,7 +294,6 @@ export const createConnection = async <
               }
             }
           }
-          console.log("msg stage 2");
           if (msg.headers?.get(CHUNK_HEADER)) {
             const chunkHeader = msg.headers.get(CHUNK_HEADER);
             const chunkParts = chunkHeader.split("/");
@@ -314,9 +310,7 @@ export const createConnection = async <
             buffer[currentChunk - 1] = new Uint8Array(msg.data);
             return;
           }
-          console.log("msg stage 3");
           if (isUndefined(msg.data) || msg.data.byteLength === 0) {
-            console.log("msg stage 3a DATA", msg.data);
             return;
           }
           clearTimeout(timeoutId);
@@ -329,7 +323,6 @@ export const createConnection = async <
           });
           await onResponse?.(responseData);
 
-          console.log("resolve stage 4", responseData);
           resolve(responseData);
         }
         if (signal) {

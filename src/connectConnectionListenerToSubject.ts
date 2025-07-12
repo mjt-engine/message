@@ -119,11 +119,6 @@ export const connectConnectionListenerToSubject = async <
         //   console.log("after publish");
         //   return;
         // }
-        console.log(
-          "connectConnectionListenerToSubject: Sending response to message.reply",
-          message.reply
-        );
-        console.log("response data", responseMsg);
         message.respond(responseMsg, {
           headers: responseHeaders,
         });
@@ -157,15 +152,9 @@ export const connectConnectionListenerToSubject = async <
         }
         buffer[currentChunk - 1] = new Uint8Array(message.data);
         if (buffer.some((msg) => isUndefined(msg))) {
-          console.log(
-            `connectListenerToSubscription: Waiting for all chunks currently on ${currentChunk}/${totalChunks}`
-          );
           continue; // Wait for all chunks
         }
         // Recombine the chunks
-        console.log(
-          `connectListenerToSubscription: Recombining chunks for ${currentChunk}/${totalChunks}`
-        );
         const combined = msgsBufferToCombinedUint8Array(buffer);
         data = combined;
       }
@@ -193,12 +182,8 @@ export const connectConnectionListenerToSubject = async <
       });
       const reply = message.reply;
       if (isUndefined(reply)) {
-        console.log(
-          "connectConnectionListenerToSubject: No reply subject found, skipping send"
-        );
         continue;
       }
-      console.log("connectConnectionListenerToSubject: Sending result", result);
       send(result);
     } catch (error) {
       const errorDetail = Errors.errorToErrorDetail({
