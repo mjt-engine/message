@@ -132,6 +132,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
             const replySubject = `reply.${subject}.${Date.now()}`;
             const hs = recordToNatsHeaders(headers);
             const subscription = connection.subscribe(replySubject);
+            await connection.flush();
             const result = new Promise(async (resolve, reject) => {
                 let buffer = [];
                 const timeoutId = setTimeout(() => {
