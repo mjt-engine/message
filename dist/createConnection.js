@@ -142,7 +142,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                     if (signal?.aborted) {
                         clearTimeout(timeoutId);
                         subscription.unsubscribe();
-                        return;
+                        return reject(new Error("Signal aborted"));
                     }
                     if (isUndefined(msg.data) || msg.data.byteLength === 0) {
                         if (buffer.length != 0) {
@@ -163,6 +163,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                             }
                             catch (e) {
                                 onError?.(e);
+                                reject(e);
                             }
                         }
                     }
@@ -181,6 +182,8 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                         return;
                     }
                     if (isUndefined(msg.data) || msg.data.byteLength === 0) {
+                        console.log("connectConnectionListenerToSubject: No data in message ", msg);
+                        resolve(undefined);
                         return;
                     }
                     clearTimeout(timeoutId);
@@ -218,7 +221,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
             for (let i = 0; i < chunkCount; i++) {
                 const start = i * maxMessageSize;
                 const end = start + maxMessageSize;
-                const chunk = msg.slice(start, end);
+                const chunk = new Uint8Array(msg.slice(start, end));
                 chunks.push(chunk);
             }
             // Publish each chunk separately
@@ -231,7 +234,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                 };
                 connection.publish(subject, chunk, {
                     headers: recordToNatsHeaders(chunkHeaders),
-                    reply: i == chunks.length - 1 ? replySubject : undefined,
+                    reply: replySubject,
                 });
             }
             return result;
