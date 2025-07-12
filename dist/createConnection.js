@@ -4,7 +4,7 @@ import { connect, credsAuthenticator, RequestStrategy, } from "nats.ws";
 import { connectConnectionListenerToSubject, DEFAULT_MAX_MESSAGE_SIZE, } from "./connectConnectionListenerToSubject";
 import { msgToResponseData } from "./msgToResponseData";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
-import { ABORT_SUBJECT_HEADER, CHUNK_HEADER, REPLY_HEADER, } from "./SPECIAL_HEADERS";
+import { ABORT_SUBJECT_HEADER, CHUNK_HEADER, } from "./SPECIAL_HEADERS";
 import { Errors } from "@mjt-engine/error";
 import { msgsBufferToCombinedUint8Array } from "./msgsBufferToCombinedUint8Array";
 export const createConnection = async ({ server, creds, token, subscribers = {}, options = {}, env = {}, }) => {
@@ -170,9 +170,6 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                                     return;
                                 }
                                 const [currentChunk, totalChunks] = chunkParts.map(Number);
-                                if ((buffer.length = 0)) {
-                                    buffer = new Array(totalChunks).fill(undefined);
-                                }
                                 if (buffer.length === 0) {
                                     buffer = new Array(totalChunks).fill(undefined);
                                 }
@@ -229,11 +226,10 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                     const chunkHeaders = {
                         ...headers,
                         [CHUNK_HEADER]: chunkHeader,
-                        [REPLY_HEADER]: replySubject,
                     };
                     connection.publish(subject, chunk, {
                         headers: recordToNatsHeaders(chunkHeaders),
-                        reply: replySubject,
+                        reply: i == chunks.length - 1 ? replySubject : undefined,
                     });
                 }
             });
