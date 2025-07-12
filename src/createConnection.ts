@@ -299,9 +299,6 @@ export const createConnection = async <
                   return;
                 }
                 const [currentChunk, totalChunks] = chunkParts.map(Number);
-                if ((buffer.length = 0)) {
-                  buffer = new Array(totalChunks).fill(undefined);
-                }
                 if (buffer.length === 0) {
                   buffer = new Array(totalChunks).fill(undefined);
                 }
@@ -359,11 +356,10 @@ export const createConnection = async <
           const chunkHeaders = {
             ...headers,
             [CHUNK_HEADER]: chunkHeader,
-            [REPLY_HEADER]: replySubject,
           };
           connection.publish(subject as string, chunk, {
             headers: recordToNatsHeaders(chunkHeaders),
-            reply: replySubject,
+            reply: i == chunks.length - 1 ? replySubject : undefined,
           });
         }
       });
