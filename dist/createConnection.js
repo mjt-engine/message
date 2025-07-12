@@ -1,12 +1,12 @@
 import { Bytes } from "@mjt-engine/byte";
+import { Errors } from "@mjt-engine/error";
 import { isDefined, isUndefined, toMany } from "@mjt-engine/object";
-import { connect, createInbox, credsAuthenticator, RequestStrategy, } from "nats.ws";
+import { connect, createInbox, credsAuthenticator, RequestStrategy } from "nats.ws";
 import { connectConnectionListenerToSubject, DEFAULT_MAX_MESSAGE_SIZE, } from "./connectConnectionListenerToSubject";
+import { msgsBufferToCombinedUint8Array } from "./msgsBufferToCombinedUint8Array";
 import { msgToResponseData } from "./msgToResponseData";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
-import { ABORT_SUBJECT_HEADER, CHUNK_HEADER, } from "./SPECIAL_HEADERS";
-import { Errors } from "@mjt-engine/error";
-import { msgsBufferToCombinedUint8Array } from "./msgsBufferToCombinedUint8Array";
+import { ABORT_SUBJECT_HEADER, CHUNK_HEADER } from "./SPECIAL_HEADERS";
 export const createConnection = async ({ server, creds, token, subscribers = {}, options = {}, env = {}, }) => {
     const { log = () => { }, maxMessageSize = DEFAULT_MAX_MESSAGE_SIZE } = options;
     log("createConnection: server: ", server);
