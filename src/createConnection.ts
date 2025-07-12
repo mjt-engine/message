@@ -259,8 +259,9 @@ export const createConnection = async <
       const replySubject = `reply.${subject}.${Date.now()}`;
       const hs = recordToNatsHeaders(headers);
 
-      return new Promise<CM[S]["response"]>((resolve, reject) => {
+      return new Promise<CM[S]["response"]>(async (resolve, reject) => {
         let buffer: (Uint8Array | undefined)[] = [];
+        console.log("subscribe to reply subject:", replySubject);
         const subscription = connection.subscribe(replySubject, {
           callback: async (err, msg) => {
             if (isDefined(err)) {
@@ -320,6 +321,13 @@ export const createConnection = async <
           // subscription.unsubscribe();
           reject(new Error("Request timed out"));
         }, timeoutMs);
+        for await (const message of subscription) {
+          console.log("got message:", message);
+          if (signal?.aborted) {
+            clearTimeout(timeoutId);
+            // subscription.unsubscribe();
+          }
+        }
         if (signal) {
           if (signal.aborted) {
             clearTimeout(timeoutId);
