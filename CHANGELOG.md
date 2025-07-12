@@ -2,6 +2,7 @@
 
 
 ## 2025-07-11
+- debugging chunked response ([77ff238](https://github.com/mjt-engine/message/commit/77ff2380807b113eb4bba25da29b59062c731d57)) by Matt Taylor
 - debugging chunked response ([e00180a](https://github.com/mjt-engine/message/commit/e00180a8e4cc3df8c7ed554f8307643914456e0e)) by Matt Taylor
 - debugging chunked response ([0b813fd](https://github.com/mjt-engine/message/commit/0b813fd64e33972e36c69251478cc5ebfe8ef89d)) by Matt Taylor
 - debugging chunked response ([4056fc5](https://github.com/mjt-engine/message/commit/4056fc55552e458babe9a1014c2951569640304e)) by Matt Taylor
