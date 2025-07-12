@@ -119,9 +119,12 @@ export const connectConnectionListenerToSubject = async <
         //   console.log("after publish");
         //   return;
         // }
-        message.respond(responseMsg, {
+        connection.publish(message.reply!, responseMsg, {
           headers: responseHeaders,
         });
+        // message.respond(responseMsg, {
+        //   headers: responseHeaders,
+        // });
       };
 
       const sendError = async (
