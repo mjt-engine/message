@@ -264,21 +264,16 @@ export const createConnection = async <
         console.log("subscribe to reply subject:", replySubject);
         const subscription = connection.subscribe(replySubject);
         const timeoutId = setTimeout(() => {
-          // subscription.unsubscribe();
+          subscription.unsubscribe();
           reject(new Error("Request timed out"));
         }, timeoutMs);
         for await (const msg of subscription) {
-          console.log("got message:", msg);
           if (signal?.aborted) {
             clearTimeout(timeoutId);
             subscription.unsubscribe();
             return;
           }
 
-          // if (isDefined(err)) {
-          //   onError?.(err);
-          //   return;
-          // }
           if (isUndefined(msg.data) || msg.data.byteLength === 0) {
             if (buffer.length != 0) {
               const combined = msgsBufferToCombinedUint8Array(buffer);
@@ -291,7 +286,7 @@ export const createConnection = async <
                   log,
                 });
                 clearTimeout(timeoutId);
-                // subscription.unsubscribe();
+                subscription.unsubscribe();
                 await onResponse?.(responseData);
                 resolve(responseData);
               } catch (e) {
@@ -317,7 +312,7 @@ export const createConnection = async <
             return;
           }
           clearTimeout(timeoutId);
-          // subscription.unsubscribe();
+          subscription.unsubscribe();
           const responseData = await msgToResponseData({
             msg,
             subject,
@@ -330,12 +325,12 @@ export const createConnection = async <
         if (signal) {
           if (signal.aborted) {
             clearTimeout(timeoutId);
-            // subscription.unsubscribe();
+            subscription.unsubscribe();
             return reject(new Error("Signal already in aborted state"));
           }
           signal.addEventListener("abort", () => {
             clearTimeout(timeoutId);
-            // subscription.unsubscribe();
+            subscription.unsubscribe();
             reject(new Error("Signal aborted"));
           });
         }
