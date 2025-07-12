@@ -2,6 +2,7 @@ import { Bytes } from "@mjt-engine/byte";
 import { isDefined, isUndefined, toMany } from "@mjt-engine/object";
 import {
   connect,
+  createInbox,
   credsAuthenticator,
   Msg,
   RequestStrategy,
@@ -27,6 +28,7 @@ import type { PartialSubject } from "./type/PartialSubject";
 import type { ValueOrError } from "./type/ValueOrError";
 import { Errors } from "@mjt-engine/error";
 import { msgsBufferToCombinedUint8Array } from "./msgsBufferToCombinedUint8Array";
+import { NatsConnectionImpl } from "nats.ws/lib/nats-base-client/nats";
 
 export type MessageConnection = NatsConnection;
 export type MessageConnectionStats = Stats;
@@ -256,7 +258,7 @@ export const createConnection = async <
       const { timeoutMs = 60 * 1000 } = options;
       const value = isDefined(payload) ? payload : request;
       const msg = Bytes.toMsgPack({ value } as ValueOrError);
-      const replySubject = `reply.${subject}.${Date.now()}`;
+      const replySubject = createInbox();
       const hs = recordToNatsHeaders(headers);
       const subscription = connection.subscribe(replySubject);
       await connection.flush();
