@@ -131,7 +131,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
             const msg = Bytes.toMsgPack({ value });
             const replySubject = `reply.${subject}.${Date.now()}`;
             const hs = recordToNatsHeaders(headers);
-            return new Promise(async (resolve, reject) => {
+            const result = new Promise(async (resolve, reject) => {
                 let buffer = [];
                 console.log("subscribe to reply subject:", replySubject);
                 const subscription = connection.subscribe(replySubject);
@@ -209,34 +209,35 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                         reject(new Error("Signal aborted"));
                     });
                 }
-                if (msg.byteLength < maxMessageSize) {
-                    return connection.publish(subject, msg, {
-                        headers: hs,
-                        reply: replySubject,
-                    });
-                }
-                const chunkCount = Math.ceil(msg.byteLength / maxMessageSize);
-                const chunks = [];
-                for (let i = 0; i < chunkCount; i++) {
-                    const start = i * maxMessageSize;
-                    const end = start + maxMessageSize;
-                    const chunk = msg.slice(start, end);
-                    chunks.push(chunk);
-                }
-                // Publish each chunk separately
-                for (let i = 0; i < chunks.length; i++) {
-                    const chunk = chunks[i];
-                    const chunkHeader = `${i + 1}/${chunkCount}`;
-                    const chunkHeaders = {
-                        ...headers,
-                        [CHUNK_HEADER]: chunkHeader,
-                    };
-                    connection.publish(subject, chunk, {
-                        headers: recordToNatsHeaders(chunkHeaders),
-                        reply: i == chunks.length - 1 ? replySubject : undefined,
-                    });
-                }
             });
+            if (msg.byteLength < maxMessageSize) {
+                return connection.publish(subject, msg, {
+                    headers: hs,
+                    reply: replySubject,
+                });
+            }
+            const chunkCount = Math.ceil(msg.byteLength / maxMessageSize);
+            const chunks = [];
+            for (let i = 0; i < chunkCount; i++) {
+                const start = i * maxMessageSize;
+                const end = start + maxMessageSize;
+                const chunk = msg.slice(start, end);
+                chunks.push(chunk);
+            }
+            // Publish each chunk separately
+            for (let i = 0; i < chunks.length; i++) {
+                const chunk = chunks[i];
+                const chunkHeader = `${i + 1}/${chunkCount}`;
+                const chunkHeaders = {
+                    ...headers,
+                    [CHUNK_HEADER]: chunkHeader,
+                };
+                connection.publish(subject, chunk, {
+                    headers: recordToNatsHeaders(chunkHeaders),
+                    reply: i == chunks.length - 1 ? replySubject : undefined,
+                });
+            }
+            return result;
         },
     };
 };
