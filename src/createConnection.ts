@@ -260,79 +260,77 @@ export const createConnection = async <
       const hs = recordToNatsHeaders(headers);
 
       return new Promise<CM[S]["response"]>((resolve, reject) => {
-        {
-          let buffer: (Uint8Array | undefined)[] = [];
-          const subscription = connection.subscribe(replySubject, {
-            callback: async (err, msg) => {
-              if (isDefined(err)) {
-                onError?.(err);
-                return;
-              }
-              if (isUndefined(msg.data) || msg.data.byteLength === 0) {
-                if (buffer.length != 0) {
-                  const combined = msgsBufferToCombinedUint8Array(buffer);
-                  buffer.length = 0; // Clear the buffer after recombining
-                  try {
-                    const responseData = await msgToResponseData({
-                      msg: { data: combined },
-                      subject,
-                      request: payload,
-                      log,
-                    });
-                    clearTimeout(timeoutId);
-                    subscription.unsubscribe();
-                    await onResponse?.(responseData);
-                    resolve(responseData);
-                  } catch (e) {
-                    onError?.(e);
-                  }
-                }
-                return;
-              }
-              if (msg.headers?.get(CHUNK_HEADER)) {
-                const chunkHeader = msg.headers.get(CHUNK_HEADER);
-                const chunkParts = chunkHeader.split("/");
-                if (chunkParts.length !== 2) {
-                  onError?.(
-                    new Error("Invalid chunk header format: " + chunkHeader)
-                  );
-                  return;
-                }
-                const [currentChunk, totalChunks] = chunkParts.map(Number);
-                if (buffer.length === 0) {
-                  buffer = new Array(totalChunks).fill(undefined);
-                }
-                buffer[currentChunk - 1] = new Uint8Array(msg.data);
-                return;
-              }
-              clearTimeout(timeoutId);
-              subscription.unsubscribe();
-              const responseData = await msgToResponseData({
-                msg,
-                subject,
-                request: payload,
-                log,
-              });
-              await onResponse?.(responseData);
-              resolve(responseData);
-            },
-          });
-          const timeoutId = setTimeout(() => {
-            subscription.unsubscribe();
-            reject(new Error("Request timed out"));
-          }, timeoutMs);
-          if (signal) {
-            if (signal.aborted) {
-              clearTimeout(timeoutId);
-              subscription.unsubscribe();
-              return reject(new Error("Signal already in aborted state"));
+        let buffer: (Uint8Array | undefined)[] = [];
+        const subscription = connection.subscribe(replySubject, {
+          callback: async (err, msg) => {
+            if (isDefined(err)) {
+              onError?.(err);
+              return;
             }
-            signal.addEventListener("abort", () => {
-              clearTimeout(timeoutId);
-              subscription.unsubscribe();
-              reject(new Error("Signal aborted"));
+            if (isUndefined(msg.data) || msg.data.byteLength === 0) {
+              if (buffer.length != 0) {
+                const combined = msgsBufferToCombinedUint8Array(buffer);
+                buffer.length = 0; // Clear the buffer after recombining
+                try {
+                  const responseData = await msgToResponseData({
+                    msg: { data: combined },
+                    subject,
+                    request: payload,
+                    log,
+                  });
+                  clearTimeout(timeoutId);
+                  // subscription.unsubscribe();
+                  await onResponse?.(responseData);
+                  resolve(responseData);
+                } catch (e) {
+                  onError?.(e);
+                }
+              }
+              return;
+            }
+            if (msg.headers?.get(CHUNK_HEADER)) {
+              const chunkHeader = msg.headers.get(CHUNK_HEADER);
+              const chunkParts = chunkHeader.split("/");
+              if (chunkParts.length !== 2) {
+                onError?.(
+                  new Error("Invalid chunk header format: " + chunkHeader)
+                );
+                return;
+              }
+              const [currentChunk, totalChunks] = chunkParts.map(Number);
+              if (buffer.length === 0) {
+                buffer = new Array(totalChunks).fill(undefined);
+              }
+              buffer[currentChunk - 1] = new Uint8Array(msg.data);
+              return;
+            }
+            clearTimeout(timeoutId);
+            // subscription.unsubscribe();
+            const responseData = await msgToResponseData({
+              msg,
+              subject,
+              request: payload,
+              log,
             });
+            await onResponse?.(responseData);
+            resolve(responseData);
+          },
+        });
+        const timeoutId = setTimeout(() => {
+          // subscription.unsubscribe();
+          reject(new Error("Request timed out"));
+        }, timeoutMs);
+        if (signal) {
+          if (signal.aborted) {
+            clearTimeout(timeoutId);
+            // subscription.unsubscribe();
+            return reject(new Error("Signal already in aborted state"));
           }
+          signal.addEventListener("abort", () => {
+            clearTimeout(timeoutId);
+            // subscription.unsubscribe();
+            reject(new Error("Signal aborted"));
+          });
         }
 
         if (msg.byteLength < maxMessageSize) {
