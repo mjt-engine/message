@@ -2,6 +2,7 @@
 
 
 ## 2025-07-11
+- debugging chunked response ([af25d00](https://github.com/mjt-engine/message/commit/af25d00bec4e44d21e4cd386c60cbbb4927c78a3)) by Matt Taylor
 - debugging chunked response ([062e5ac](https://github.com/mjt-engine/message/commit/062e5ac43567934c924268cd9704f840f5b68e49)) by Matt Taylor
 - debug msgs ([7149e29](https://github.com/mjt-engine/message/commit/7149e29b8d73a2b1daa822c1f0407294e265bccf)) by Matt Taylor
 - reply field not reply header ([179f746](https://github.com/mjt-engine/message/commit/179f74657444bde3aa94fda309ba8954d78b01d5)) by Matt Taylor
