@@ -315,6 +315,10 @@ export const createConnection = async <
             return;
           }
           console.log("msg stage 3");
+          if (isUndefined(msg.data) || msg.data.byteLength === 0) {
+            console.log("msg stage 3a DATA", msg.data);
+            return;
+          }
           clearTimeout(timeoutId);
           subscription.unsubscribe();
           const responseData = await msgToResponseData({
