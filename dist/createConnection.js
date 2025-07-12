@@ -16,7 +16,6 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
             ? credsAuthenticator(new TextEncoder().encode(creds))
             : undefined,
         token: token,
-        debug: true,
     });
     const entries = Object.entries(subscribers);
     log("createConnection: entries: ", entries);
@@ -132,7 +131,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
             const msg = Bytes.toMsgPack({ value });
             const replySubject = `reply.${subject}.${Date.now()}`;
             const hs = recordToNatsHeaders(headers);
-            const subscription = connection.subscribe(replySubject, {});
+            const subscription = connection.subscribe(replySubject);
             const result = new Promise(async (resolve, reject) => {
                 let buffer = [];
                 const timeoutId = setTimeout(() => {
