@@ -116,6 +116,7 @@ export const connectConnectionListenerToSubject = async ({ connection, subject, 
                 console.log("connectConnectionListenerToSubject: No reply subject found, skipping send");
                 continue;
             }
+            console.log("connectConnectionListenerToSubject: Sending result", result);
             send(result);
         }
         catch (error) {
