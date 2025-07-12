@@ -185,6 +185,10 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                         return;
                     }
                     console.log("msg stage 3");
+                    if (isUndefined(msg.data) || msg.data.byteLength === 0) {
+                        console.log("msg stage 3a DATA", msg.data);
+                        return;
+                    }
                     clearTimeout(timeoutId);
                     subscription.unsubscribe();
                     const responseData = await msgToResponseData({
