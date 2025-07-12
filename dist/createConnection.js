@@ -133,6 +133,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
             const hs = recordToNatsHeaders(headers);
             return new Promise((resolve, reject) => {
                 let buffer = [];
+                console.log("subscribe to reply subject:", replySubject);
                 const subscription = connection.subscribe(replySubject, {
                     callback: async (err, msg) => {
                         if (isDefined(err)) {
