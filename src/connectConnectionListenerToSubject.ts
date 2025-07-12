@@ -189,6 +189,7 @@ export const connectConnectionListenerToSubject = async <
         );
         continue;
       }
+      console.log("connectConnectionListenerToSubject: Sending result", result);
       send(result);
     } catch (error) {
       const errorDetail = Errors.errorToErrorDetail({
