@@ -81,10 +81,10 @@ export const connectConnectionListenerToSubject = async <
           headers: Record<string, string>;
         }> = {}
       ) => {
-        console.log(
-          "connectConnectionListenerToSubject: send called",
-          response
-        );
+        // console.log(
+        //   "connectConnectionListenerToSubject: send called",
+        //   response
+        // );
         const responseHeaders = natsHeaders(
           options.code,
           options.codeDescription
@@ -95,7 +95,7 @@ export const connectConnectionListenerToSubject = async <
           }
         }
         if (isUndefined(response)) {
-          console.log("NO RESPONSE SENDING EMPTY ISH REPLY");
+          // console.log("NO RESPONSE SENDING EMPTY ISH REPLY");
           // connection.publish(message.reply!);
           message.respond(undefined, {
             headers: responseHeaders,
@@ -122,10 +122,10 @@ export const connectConnectionListenerToSubject = async <
         // connection.publish(message.reply!, responseMsg, {
         //   headers: responseHeaders,
         // });
-        console.log(
-          `connectConnectionListenerToSubject: Sending response to reply subject: ${message.reply}`,
-          responseMsg
-        );
+        // console.log(
+        //   `connectConnectionListenerToSubject: Sending response to reply subject: ${message.reply}`,
+        //   responseMsg
+        // );
         message.respond(responseMsg, {
           headers: responseHeaders,
         });

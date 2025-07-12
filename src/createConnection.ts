@@ -1,34 +1,31 @@
 import { Bytes } from "@mjt-engine/byte";
+import { Errors } from "@mjt-engine/error";
 import { isDefined, isUndefined, toMany } from "@mjt-engine/object";
 import {
   connect,
   createInbox,
   credsAuthenticator,
-  Msg,
   RequestStrategy,
   type NatsConnection,
   type Stats,
-  type Status,
+  type Status
 } from "nats.ws";
 import {
   connectConnectionListenerToSubject,
   DEFAULT_MAX_MESSAGE_SIZE,
 } from "./connectConnectionListenerToSubject";
+import { msgsBufferToCombinedUint8Array } from "./msgsBufferToCombinedUint8Array";
 import { msgToResponseData } from "./msgToResponseData";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
 import {
   ABORT_SUBJECT_HEADER,
-  CHUNK_HEADER,
-  REPLY_HEADER,
+  CHUNK_HEADER
 } from "./SPECIAL_HEADERS";
 import type { ConnectionListener } from "./type/ConnectionListener";
 import type { ConnectionMap } from "./type/ConnectionMap";
 import type { EventMap } from "./type/EventMap";
 import type { PartialSubject } from "./type/PartialSubject";
 import type { ValueOrError } from "./type/ValueOrError";
-import { Errors } from "@mjt-engine/error";
-import { msgsBufferToCombinedUint8Array } from "./msgsBufferToCombinedUint8Array";
-import { NatsConnectionImpl } from "nats.ws/lib/nats-base-client/nats";
 
 export type MessageConnection = NatsConnection;
 export type MessageConnectionStats = Stats;
