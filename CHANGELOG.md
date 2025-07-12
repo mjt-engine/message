@@ -2,6 +2,7 @@
 
 
 ## 2025-07-12
+- work though chunk response bug ([76a7d46](https://github.com/mjt-engine/message/commit/76a7d467f89c4eac7622be915b5f9c59b9c52ed2)) by Matt Taylor
 - work though chunk response bug ([5e8dc79](https://github.com/mjt-engine/message/commit/5e8dc79b8eb3697488211e08c8a7299b1efbe432)) by Matt Taylor
 - work though chunk response bug ([13ec0ee](https://github.com/mjt-engine/message/commit/13ec0ee1ddcddc3ee7d03a8331b6e5b4b9c83a50)) by Matt Taylor
 - work though chunk response bug ([e75781e](https://github.com/mjt-engine/message/commit/e75781e457ea22479b60e8272a8618f0a1d8993b)) by Matt Taylor
