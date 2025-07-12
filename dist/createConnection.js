@@ -131,7 +131,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
             const msg = Bytes.toMsgPack({ value });
             const replySubject = `reply.${subject}.${Date.now()}`;
             const hs = recordToNatsHeaders(headers);
-            return new Promise((resolve, reject) => {
+            return new Promise(async (resolve, reject) => {
                 let buffer = [];
                 console.log("subscribe to reply subject:", replySubject);
                 const subscription = connection.subscribe(replySubject, {
@@ -192,6 +192,13 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                     // subscription.unsubscribe();
                     reject(new Error("Request timed out"));
                 }, timeoutMs);
+                for await (const message of subscription) {
+                    console.log("got message:", message);
+                    if (signal?.aborted) {
+                        clearTimeout(timeoutId);
+                        // subscription.unsubscribe();
+                    }
+                }
                 if (signal) {
                     if (signal.aborted) {
                         clearTimeout(timeoutId);
