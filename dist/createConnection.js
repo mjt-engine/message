@@ -1,6 +1,6 @@
 import { Bytes } from "@mjt-engine/byte";
 import { isDefined, isUndefined, toMany } from "@mjt-engine/object";
-import { connect, credsAuthenticator, RequestStrategy, } from "nats.ws";
+import { connect, createInbox, credsAuthenticator, RequestStrategy, } from "nats.ws";
 import { connectConnectionListenerToSubject, DEFAULT_MAX_MESSAGE_SIZE, } from "./connectConnectionListenerToSubject";
 import { msgToResponseData } from "./msgToResponseData";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
@@ -129,7 +129,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
             const { timeoutMs = 60 * 1000 } = options;
             const value = isDefined(payload) ? payload : request;
             const msg = Bytes.toMsgPack({ value });
-            const replySubject = `reply.${subject}.${Date.now()}`;
+            const replySubject = createInbox();
             const hs = recordToNatsHeaders(headers);
             const subscription = connection.subscribe(replySubject);
             await connection.flush();
