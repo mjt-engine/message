@@ -145,6 +145,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                         subscription.unsubscribe();
                         return;
                     }
+                    console.log("msg stage 1");
                     if (isUndefined(msg.data) || msg.data.byteLength === 0) {
                         if (buffer.length != 0) {
                             const combined = msgsBufferToCombinedUint8Array(buffer);
@@ -167,6 +168,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                         }
                         return;
                     }
+                    console.log("msg stage 2");
                     if (msg.headers?.get(CHUNK_HEADER)) {
                         const chunkHeader = msg.headers.get(CHUNK_HEADER);
                         const chunkParts = chunkHeader.split("/");
@@ -181,6 +183,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                         buffer[currentChunk - 1] = new Uint8Array(msg.data);
                         return;
                     }
+                    console.log("msg stage 3");
                     clearTimeout(timeoutId);
                     subscription.unsubscribe();
                     const responseData = await msgToResponseData({
@@ -190,6 +193,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                         log,
                     });
                     await onResponse?.(responseData);
+                    console.log("resolve stage 4", responseData);
                     resolve(responseData);
                 }
                 if (signal) {
