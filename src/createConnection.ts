@@ -276,6 +276,7 @@ export const createConnection = async <
 
           console.log("msg stage 1");
           if (isUndefined(msg.data) || msg.data.byteLength === 0) {
+            console.log("msg stage 1a DATA", msg.data);
             if (buffer.length != 0) {
               const combined = msgsBufferToCombinedUint8Array(buffer);
               buffer.length = 0; // Clear the buffer after recombining
