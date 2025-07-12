@@ -73,12 +73,13 @@ export const connectConnectionListenerToSubject = async ({ connection, subject, 
                 //   console.log("after publish");
                 //   return;
                 // }
-                connection.publish(message.reply, responseMsg, {
-                    headers: responseHeaders,
-                });
-                // message.respond(responseMsg, {
+                // connection.publish(message.reply!, responseMsg, {
                 //   headers: responseHeaders,
                 // });
+                console.log(`connectConnectionListenerToSubject: Sending response to reply subject: ${message.reply}`, responseMsg);
+                message.respond(responseMsg, {
+                    headers: responseHeaders,
+                });
             };
             const sendError = async (error, options = {}) => sendMessageError(message)(error, options);
             const unsubscribe = (maxMessages) => subscription.unsubscribe(maxMessages);

@@ -1,6 +1,6 @@
 {
   "name": "@mjt-engine/message",
-  "version": "2025.7.12-1428",
+  "version": "2025.7.12-1434",
   "sideEffects": false,
   "description": "mjtdev message",
   "main": "./dist/index.js",
