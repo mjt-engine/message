@@ -259,6 +259,7 @@ export const createConnection = async <
       const replySubject = `reply.${subject}.${Date.now()}`;
       const hs = recordToNatsHeaders(headers);
       const subscription = connection.subscribe(replySubject);
+      await connection.flush();
       const result = new Promise<CM[S]["response"]>(async (resolve, reject) => {
         let buffer: (Uint8Array | undefined)[] = [];
         const timeoutId = setTimeout(() => {
