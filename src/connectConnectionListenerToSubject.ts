@@ -95,7 +95,11 @@ export const connectConnectionListenerToSubject = async <
           }
         }
         if (isUndefined(response)) {
-          connection.publish(message.reply!);
+          console.log("NO RESPONSE SENDING EMPTY ISH REPLY");
+          // connection.publish(message.reply!);
+          message.respond(undefined, {
+            headers: responseHeaders,
+          });
           return;
         }
         // const replySubject = message.headers?.get(REPLY_HEADER);
@@ -119,6 +123,7 @@ export const connectConnectionListenerToSubject = async <
           "connectConnectionListenerToSubject: Sending response to message.reply",
           message.reply
         );
+        console.log("response data", responseMsg);
         message.respond(responseMsg, {
           headers: responseHeaders,
         });
