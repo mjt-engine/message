@@ -162,12 +162,12 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                                 subscription.unsubscribe();
                                 await onResponse?.(responseData);
                                 resolve(responseData);
+                                return;
                             }
                             catch (e) {
                                 onError?.(e);
                             }
                         }
-                        return;
                     }
                     console.log("msg stage 2");
                     if (msg.headers?.get(CHUNK_HEADER)) {
