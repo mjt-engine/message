@@ -1,6 +1,9 @@
 # Changelog
 
 
+## 2025-07-12
+- use publish instead of respond for sending messages on return stroke ([dbb4f5b](https://github.com/mjt-engine/message/commit/dbb4f5b10fb4744b9792e471c7c6c7fc8b8d45cc)) by Matt Taylor
+
 ## 2025-07-11
 - remove debug logging ([efafd95](https://github.com/mjt-engine/message/commit/efafd958aa1165d0969ecdad903883803ab8aee8)) by Matt Taylor
 - debugging chunked response ([8fd1c7f](https://github.com/mjt-engine/message/commit/8fd1c7f01b13d15d1f09746667422538ffadde5d)) by Matt Taylor
