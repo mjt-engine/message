@@ -120,6 +120,7 @@ export const connectConnectionListenerToSubject = async ({ connection, subject, 
             if (isUndefined(reply)) {
                 continue;
             }
+            console.log(`connectConnectionListenerToSubject: Sending response to ${subject} reply subject: ${reply}`, result);
             send(result);
         }
         catch (error) {
