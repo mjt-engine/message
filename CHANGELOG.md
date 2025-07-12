@@ -2,6 +2,7 @@
 
 
 ## 2025-07-12
+- work though chunk response bug ([787a6b7](https://github.com/mjt-engine/message/commit/787a6b70506b2a9e40e4b407c8123e6dbd4aa190)) by Matt Taylor
 - work though chunk response bug ([359bbe1](https://github.com/mjt-engine/message/commit/359bbe17e14122f62745871aa6cc84767a60a5a2)) by Matt Taylor
 - use publish instead of respond for sending messages on return stroke ([dbb4f5b](https://github.com/mjt-engine/message/commit/dbb4f5b10fb4744b9792e471c7c6c7fc8b8d45cc)) by Matt Taylor
 

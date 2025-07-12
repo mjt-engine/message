@@ -131,9 +131,9 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
             const msg = Bytes.toMsgPack({ value });
             const replySubject = `reply.${subject}.${Date.now()}`;
             const hs = recordToNatsHeaders(headers);
+            const subscription = connection.subscribe(replySubject);
             const result = new Promise(async (resolve, reject) => {
                 let buffer = [];
-                const subscription = connection.subscribe(replySubject);
                 const timeoutId = setTimeout(() => {
                     subscription.unsubscribe();
                     reject(new Error("Request timed out"));

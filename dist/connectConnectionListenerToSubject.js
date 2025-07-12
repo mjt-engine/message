@@ -118,6 +118,7 @@ export const connectConnectionListenerToSubject = async ({ connection, subject, 
             });
             const reply = message.reply;
             if (isUndefined(reply)) {
+                console.log("connectConnectionListenerToSubject: No reply subject found, skipping response");
                 continue;
             }
             console.log(`connectConnectionListenerToSubject: Sending response to ${subject} reply subject: ${reply}`, result);
