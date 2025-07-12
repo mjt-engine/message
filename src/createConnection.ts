@@ -368,9 +368,11 @@ export const createConnection = async <
           ...headers,
           [CHUNK_HEADER]: chunkHeader,
         };
-        connection.publish(subject as string, chunk, {
+        connection.request(subject as string, chunk, {
           headers: recordToNatsHeaders(chunkHeaders),
           reply: replySubject,
+          timeout: timeoutMs,
+          noMux: true, // Ensure no multiplexing for chunked messages
         });
       }
       return result;
