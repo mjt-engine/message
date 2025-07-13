@@ -42,6 +42,7 @@ export const connectEventListenerToSubjectRoot = async <
     max: maxMessages,
     timeout,
   });
+  await connection.flush();
 
   if (isDefined(signal)) {
     if (signal.aborted) {
