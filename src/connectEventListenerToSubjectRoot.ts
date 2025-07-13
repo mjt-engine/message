@@ -49,7 +49,6 @@ export const connectEventListenerToSubjectRoot = async <
       throw new Error("Signal already in aborted state");
     }
     signal.addEventListener("abort", () => {
-      console.log(`aborting subscription: ${subscription.getID()}`);
       subscription.unsubscribe();
     });
   } else {
