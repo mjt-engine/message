@@ -2,6 +2,7 @@
 
 
 ## 2025-07-13
+- add connection flush on subscription ([619fe71](https://github.com/mjt-engine/message/commit/619fe71151611ca694070aa626addda7c0c7d412)) by Matt Taylor
 - remove debug logging ([b303d29](https://github.com/mjt-engine/message/commit/b303d291c1bdfb7ef52421ea85c50d957175edab)) by Matt Taylor
 
 ## 2025-07-12

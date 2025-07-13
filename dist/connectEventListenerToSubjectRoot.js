@@ -10,6 +10,7 @@ export const connectEventListenerToSubjectRoot = async ({ connection, subjectRoo
         max: maxMessages,
         timeout,
     });
+    await connection.flush();
     if (isDefined(signal)) {
         if (signal.aborted) {
             subscription.unsubscribe();
