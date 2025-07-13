@@ -8,7 +8,7 @@ import {
   RequestStrategy,
   type NatsConnection,
   type Stats,
-  type Status
+  type Status,
 } from "nats.ws";
 import {
   connectConnectionListenerToSubject,
@@ -17,10 +17,7 @@ import {
 import { msgsBufferToCombinedUint8Array } from "./msgsBufferToCombinedUint8Array";
 import { msgToResponseData } from "./msgToResponseData";
 import { recordToNatsHeaders } from "./recordToNatsHeaders";
-import {
-  ABORT_SUBJECT_HEADER,
-  CHUNK_HEADER
-} from "./SPECIAL_HEADERS";
+import { ABORT_SUBJECT_HEADER, CHUNK_HEADER } from "./SPECIAL_HEADERS";
 import type { ConnectionListener } from "./type/ConnectionListener";
 import type { ConnectionMap } from "./type/ConnectionMap";
 import type { EventMap } from "./type/EventMap";
@@ -263,7 +260,7 @@ export const createConnection = async <
         let buffer: (Uint8Array | undefined)[] = [];
         const timeoutId = setTimeout(() => {
           subscription.unsubscribe();
-          reject(new Error("Request timed out"));
+          // reject(new Error("Request timed out"));
         }, timeoutMs);
         for await (const msg of subscription) {
           if (signal?.aborted) {
