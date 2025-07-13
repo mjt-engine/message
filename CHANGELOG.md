@@ -1,6 +1,9 @@
 # Changelog
 
 
+## 2025-07-13
+- remove debug logging ([b303d29](https://github.com/mjt-engine/message/commit/b303d291c1bdfb7ef52421ea85c50d957175edab)) by Matt Taylor
+
 ## 2025-07-12
 - work though chunk response bug ([5abd000](https://github.com/mjt-engine/message/commit/5abd0008340b23e54fb00247a671b0b594ffb76d)) by Matt Taylor
 - work though chunk response bug ([1e40430](https://github.com/mjt-engine/message/commit/1e4043057cbae7cea415db648bc0c53c558ac753)) by Matt Taylor
