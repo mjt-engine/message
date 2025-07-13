@@ -2,6 +2,7 @@
 
 
 ## 2025-07-13
+- remove error on timeout for publish ([ff4cb74](https://github.com/mjt-engine/message/commit/ff4cb740450da7dcf8e9442b07751721f234adb3)) by Matt Taylor
 - add connection flush on subscription ([619fe71](https://github.com/mjt-engine/message/commit/619fe71151611ca694070aa626addda7c0c7d412)) by Matt Taylor
 - remove debug logging ([b303d29](https://github.com/mjt-engine/message/commit/b303d291c1bdfb7ef52421ea85c50d957175edab)) by Matt Taylor
 

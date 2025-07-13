@@ -1,7 +1,7 @@
 import { Bytes } from "@mjt-engine/byte";
 import { Errors } from "@mjt-engine/error";
 import { isDefined, isUndefined, toMany } from "@mjt-engine/object";
-import { connect, createInbox, credsAuthenticator, RequestStrategy } from "nats.ws";
+import { connect, createInbox, credsAuthenticator, RequestStrategy, } from "nats.ws";
 import { connectConnectionListenerToSubject, DEFAULT_MAX_MESSAGE_SIZE, } from "./connectConnectionListenerToSubject";
 import { msgsBufferToCombinedUint8Array } from "./msgsBufferToCombinedUint8Array";
 import { msgToResponseData } from "./msgToResponseData";
@@ -137,7 +137,7 @@ export const createConnection = async ({ server, creds, token, subscribers = {},
                 let buffer = [];
                 const timeoutId = setTimeout(() => {
                     subscription.unsubscribe();
-                    reject(new Error("Request timed out"));
+                    // reject(new Error("Request timed out"));
                 }, timeoutMs);
                 for await (const msg of subscription) {
                     if (signal?.aborted) {
